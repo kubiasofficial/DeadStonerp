@@ -86,3 +86,15 @@ export async function writeAudit(actor, action, target, metadata = {}) {
     createdAt: FieldValue.serverTimestamp()
   });
 }
+
+export async function saveDiscordUser(user) {
+  const ref = db.collection("discordUsers").doc(String(user.id));
+  await ref.set({
+    discordId: String(user.id),
+    username: String(user.username || ""),
+    globalName: String(user.global_name || user.username || ""),
+    avatar: user.avatar || null,
+    lastLoginAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp()
+  }, { merge: true });
+}

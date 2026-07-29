@@ -108,6 +108,35 @@ async function loadLiveData() {
 
 loadLiveData();
 
+async function loadDiscordSession() {
+  const apiBase = window.DEADSTONE_CONFIG?.apiBase?.replace(/\/$/, "");
+  if (!apiBase) return;
+  document.querySelectorAll(".discord-login").forEach(link => {
+    link.href = `${apiBase}/auth/discord`;
+  });
+  try {
+    const response = await fetch(`${apiBase}/api/auth/me`, { credentials: "include" });
+    if (!response.ok) return;
+    const { user } = await response.json();
+    const profile = document.querySelector(".discord-profile");
+    const whitelist = document.querySelector(".whitelist-link");
+    if (!profile || !user) return;
+    document.querySelector(".nav-join")?.setAttribute("hidden", "");
+    profile.hidden = false;
+    profile.querySelector("img").src = user.avatar;
+    profile.querySelector("img").alt = `Profilový obrázek ${user.username}`;
+    profile.querySelector("span").textContent = user.username;
+    profile.querySelector("small").hidden = !user.owner;
+    if (whitelist) whitelist.hidden = false;
+    document.documentElement.dataset.authenticated = "true";
+    if (user.owner) document.documentElement.dataset.owner = "true";
+  } catch (error) {
+    console.info("Discord relaci se nepodařilo načíst.", error.message);
+  }
+}
+
+loadDiscordSession();
+
 const toggle = document.querySelector(".menu-toggle");
 const menu = document.querySelector(".nav-menu");
 toggle.addEventListener("click", () => {

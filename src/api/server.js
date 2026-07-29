@@ -10,13 +10,18 @@ import {
   updateSiteSettings
 } from "../services/content-service.js";
 import { requireAdmin, validateWhitelist } from "./middleware.js";
+import { registerDiscordAuth } from "./discord-auth.js";
 
 export function createApiServer() {
   const app = express();
   app.disable("x-powered-by");
   app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
-  app.use(cors({ origin: env.publicOrigin.split(",").map(value => value.trim()) }));
+  app.use(cors({
+    origin: env.publicOrigin.split(",").map(value => value.trim()),
+    credentials: true
+  }));
   app.use(express.json({ limit: "100kb" }));
+  registerDiscordAuth(app);
 
   app.get("/api/health", (_req, res) => {
     res.json({ ok: true, service: "deadstone-platform", time: new Date().toISOString() });
