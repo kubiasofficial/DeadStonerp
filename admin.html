@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Administrace | Deadstone Roleplay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Roboto+Slab:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="whitelist.css">
+</head>
+<body>
+  <nav class="portal-nav"><a href="index.html"><img src="obrazky/logo-transparent.png" alt="Deadstone"></a><div><a class="button button-ghost" href="whitelist.html">Můj whitelist</a><a class="button button-small" href="index.html">Zpět na web</a></div></nav>
+  <header class="portal-header"><p class="eyebrow">Správa státu Deadstone</p><h1>Administrace</h1><p>Whitelistové žádosti a pohovory</p></header>
+  <main class="portal-main shell">
+    <div id="admin-message" class="message" hidden></div>
+    <div class="admin-layout">
+      <aside class="portal-card admin-side">
+        <button class="tab active" data-section="applications">Whitelist</button>
+        <button class="tab" data-section="interviews">Pohovory</button>
+      </aside>
+      <section class="portal-card">
+        <div class="tabs" id="admin-tabs"></div>
+        <div class="request-list" id="admin-list"><p>Načítám úřední záznamy…</p></div>
+      </section>
+    </div>
+  </main>
+  <script src="web-config.js"></script><script src="admin.js"></script>
+</body>
+</html>

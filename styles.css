@@ -33,6 +33,7 @@ img { max-width: 100%; display: block; }
 .nav-menu a:hover, .nav-menu a:focus-visible { color: var(--gold-light); text-shadow: 0 0 14px rgba(190,126,47,.45); }
 .nav-menu a.active { color: var(--gold-light); }
 .nav-menu .whitelist-link { padding: 7px 12px; color: #efd3a3; border: 1px solid #9a5e24; background: linear-gradient(#8a4e18, #4b280d); box-shadow: 0 0 16px rgba(187,111,35,.3); }
+.nav-menu .admin-link { padding: 7px 12px; color: #f2c4b9; border: 1px solid #a13c2c; background: linear-gradient(#922f20, #50150e); box-shadow: 0 0 16px rgba(164,45,29,.35); }
 .discord-profile { display: flex; align-items: center; gap: 9px; min-width: 150px; padding: 5px 10px 5px 5px; color: #d2bd9b; background: rgba(22,17,12,.92); border: 1px solid #604322; font: 11px var(--display); cursor: pointer; }
 .discord-profile[hidden] { display: none; }
 .discord-profile img { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #a77a3d; }

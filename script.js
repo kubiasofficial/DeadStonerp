@@ -120,6 +120,7 @@ async function loadDiscordSession() {
     const { user } = await response.json();
     const profile = document.querySelector(".discord-profile");
     const whitelist = document.querySelector(".whitelist-link");
+    const adminLink = document.querySelector(".admin-link");
     if (!profile || !user) return;
     document.querySelectorAll(".discord-login").forEach(link => {
       link.setAttribute("hidden", "");
@@ -128,10 +129,12 @@ async function loadDiscordSession() {
     profile.querySelector("img").src = user.avatar;
     profile.querySelector("img").alt = `Profilový obrázek ${user.username}`;
     profile.querySelector("span").textContent = user.username;
-    profile.querySelector("small").hidden = !user.owner;
+    profile.querySelector("small").hidden = !user.admin;
+    profile.querySelector("small").textContent = user.admin ? "Admin" : "";
     if (whitelist) whitelist.hidden = false;
+    if (adminLink) adminLink.hidden = !user.admin;
     document.documentElement.dataset.authenticated = "true";
-    if (user.owner) document.documentElement.dataset.owner = "true";
+    if (user.admin) document.documentElement.dataset.admin = "true";
   } catch (error) {
     console.info("Discord relaci se nepodařilo načíst.", error.message);
   }

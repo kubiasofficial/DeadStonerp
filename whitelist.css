@@ -1,0 +1,49 @@
+@import url("styles.css");
+
+body { min-height: 100vh; background: linear-gradient(rgba(7,6,5,.86), rgba(7,6,5,.96)), url("obrazky/pravidla-podklad.webp") center/cover fixed; }
+.portal-header { min-height: 230px; padding: 110px 24px 45px; text-align: center; border-bottom: 1px solid var(--line); }
+.portal-header h1 { font-size: clamp(38px, 7vw, 72px); }
+.portal-header p { color: #a99a82; }
+.portal-nav { position: fixed; inset: 0 0 auto; z-index: 10; height: 76px; display: flex; align-items: center; justify-content: space-between; padding: 0 max(24px, calc((100% - 1190px)/2)); background: rgba(7,6,5,.94); border-bottom: 1px solid var(--line); }
+.portal-nav img { width: 100px; }
+.portal-nav div { display: flex; gap: 10px; }
+.portal-main { padding: 35px 0 80px; }
+.portal-grid { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 18px; }
+.portal-card { padding: 24px; background: linear-gradient(145deg, rgba(27,23,18,.97), rgba(12,11,9,.98)); border: 1px solid var(--line); box-shadow: inset 0 0 30px #0006, 0 12px 35px #0005; }
+.portal-card h2 { font-size: 19px; }
+.attempts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 18px 0; }
+.attempt { height: 48px; display: grid; place-items: center; color: var(--gold-light); border: 1px solid #76532f; background: #1d160f; }
+.attempt.used { opacity: .25; filter: grayscale(1); }
+.status-badge { display: inline-flex; padding: 6px 10px; color: #d4b47d; border: 1px solid #674a2c; font: 10px var(--display); text-transform: uppercase; }
+.status-badge.approved { color: #b8d292; border-color: #536c3d; }
+.status-badge.rejected { color: #dc9b8b; border-color: #7b3328; }
+.portal-form { display: grid; gap: 22px; }
+.field label, .question-card h3 { display: block; margin-bottom: 8px; color: #c5a677; font: 12px var(--display); text-transform: uppercase; }
+.field textarea, .field input { width: 100%; min-height: 48px; padding: 13px; resize: vertical; color: #d5c6ae; background: #0d0c0a; border: 1px solid #4b3823; font: 13px var(--body); }
+.field textarea { min-height: 100px; }
+.question-card { padding: 18px; border-left: 2px solid #8b5b2b; background: #0e0c09aa; }
+.question-card p { color: #8f826e; }
+.message { padding: 12px 15px; color: #d9c5a5; border: 1px solid #65472a; background: #19130d; }
+.message.error { color: #e4a497; border-color: #7e3024; }
+.reason { padding: 12px; color: #d39a8d; border-left: 2px solid #8c392b; background: #1c0d0a; }
+.history { display: grid; gap: 8px; margin-top: 20px; }
+.history-item { padding: 10px; border: 1px solid #352719; color: #8f826e; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.tab { padding: 9px 13px; color: #bda889; background: #15110d; border: 1px solid #4e3923; cursor: pointer; font: 10px var(--display); text-transform: uppercase; }
+.tab.active { color: #f0cfa0; background: #6d2b1d; border-color: #9a4734; }
+.request-list { display: grid; gap: 12px; }
+.request-card { padding: 18px; border: 1px solid #4b3823; background: #0d0c09; }
+.request-head { display: flex; align-items: center; gap: 12px; }
+.request-head img { width: 42px; height: 42px; border-radius: 50%; }
+.request-card dl { display: grid; grid-template-columns: 150px 1fr; gap: 7px 14px; }
+.request-card dt { color: #816d52; }.request-card dd { margin: 0; color: #c5b397; white-space: pre-wrap; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.button.approve { background: linear-gradient(#536b38,#2d3c1d); border-color: #718b4d; }
+.button.reject { background: linear-gradient(#812d21,#48140e); }
+.admin-layout { display: grid; grid-template-columns: 220px 1fr; gap: 18px; }
+.admin-side button { width: 100%; margin-bottom: 8px; }
+@media (max-width: 760px) {
+  .portal-grid, .admin-layout { grid-template-columns: 1fr; }
+  .portal-nav { height: 66px; }.portal-nav img { width: 78px; }
+  .portal-card { padding: 17px; }.request-card dl { grid-template-columns: 1fr; }
+}

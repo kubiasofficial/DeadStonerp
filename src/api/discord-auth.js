@@ -24,7 +24,7 @@ function sessionToken(profile) {
   return `${payload}.${signature(payload)}`;
 }
 
-function readSession(req) {
+export function readSession(req) {
   if (!env.sessionSecret) return null;
   const token = cookies(req).deadstone_session;
   if (!token) return null;
@@ -134,18 +134,29 @@ export function registerDiscordAuth(app) {
     }
   });
 
-  app.get("/api/auth/me", (req, res) => {
+  app.get("/api/auth/me", async (req, res, next) => {
     const session = readSession(req);
     if (!session) return res.status(401).json({ authenticated: false });
-    res.json({
-      authenticated: true,
-      user: {
-        id: session.id,
-        username: session.username,
-        avatar: session.avatar,
-        owner: session.id === env.discordOwnerId
-      }
-    });
+    try {
+      const memberResponse = await fetch(`${DISCORD_API}/guilds/${env.discordGuildId}/members/${session.id}`, {
+        headers: { Authorization: `Bot ${env.discordToken}` }
+      });
+      const member = memberResponse.ok ? await memberResponse.json() : { roles: [] };
+      const roles = member.roles || [];
+      const admin = env.discordAdminRoleIds.some(roleId => roles.includes(roleId));
+      res.json({
+        authenticated: true,
+        user: {
+          id: session.id,
+          username: session.username,
+          avatar: session.avatar,
+          admin,
+          roles
+        }
+      });
+    } catch (error) {
+      next(error);
+    }
   });
 
   app.post("/api/auth/logout", (req, res) => {

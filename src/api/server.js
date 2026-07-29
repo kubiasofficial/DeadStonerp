@@ -6,11 +6,15 @@ import {
   createContent,
   getSiteSettings,
   listPublished,
-  submitWhitelistApplication,
   updateSiteSettings
 } from "../services/content-service.js";
-import { requireAdmin, validateWhitelist } from "./middleware.js";
+import { requireAdmin, requireDiscordAdmin, requireSession } from "./middleware.js";
 import { registerDiscordAuth } from "./discord-auth.js";
+import {
+  adjustAttempts, claimApplication, claimInterview, decideApplication, decideInterview,
+  getPlayerWhitelist, listAdminApplications, listAdminInterviews,
+  requestInterview, submitApplication
+} from "../services/whitelist-service.js";
 
 export function createApiServer() {
   const app = express();
@@ -45,10 +49,55 @@ export function createApiServer() {
     } catch (error) { next(error); }
   });
 
-  app.post("/api/whitelist", validateWhitelist, async (req, res, next) => {
+  app.get("/api/whitelist/me", requireSession, async (req, res, next) => {
     try {
-      res.status(201).json({ data: await submitWhitelistApplication(req.body) });
+      res.json({ data: await getPlayerWhitelist(req.user.id) });
     } catch (error) { next(error); }
+  });
+
+  app.post("/api/whitelist/applications", requireSession, async (req, res, next) => {
+    try { res.status(201).json({ data: await submitApplication(req.user, req.body) }); }
+    catch (error) { next(error); }
+  });
+
+  app.post("/api/whitelist/interviews", requireSession, async (req, res, next) => {
+    try { res.status(201).json({ data: await requestInterview(req.user) }); }
+    catch (error) { next(error); }
+  });
+
+  app.get("/api/admin/whitelist/applications", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await listAdminApplications(String(req.query.status || "pending")) }); }
+    catch (error) { next(error); }
+  });
+
+  app.patch("/api/admin/whitelist/applications/:id", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await decideApplication(req.params.id, req.user, req.body.decision, req.body.reason) }); }
+    catch (error) { next(error); }
+  });
+
+  app.post("/api/admin/whitelist/applications/:id/claim", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await claimApplication(req.params.id, req.user) }); }
+    catch (error) { next(error); }
+  });
+
+  app.get("/api/admin/whitelist/interviews", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await listAdminInterviews(String(req.query.status || "waiting")) }); }
+    catch (error) { next(error); }
+  });
+
+  app.post("/api/admin/whitelist/interviews/:id/claim", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await claimInterview(req.params.id, req.user) }); }
+    catch (error) { next(error); }
+  });
+
+  app.patch("/api/admin/whitelist/interviews/:id", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await decideInterview(req.params.id, req.user, req.body.decision, req.body.reason) }); }
+    catch (error) { next(error); }
+  });
+
+  app.patch("/api/admin/whitelist/attempts/:discordId", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await adjustAttempts(req.params.discordId, req.body.type, req.body.amount) }); }
+    catch (error) { next(error); }
   });
 
   app.patch("/api/admin/site", requireAdmin, async (req, res, next) => {
@@ -71,8 +120,8 @@ export function createApiServer() {
   app.use((_req, res) => res.status(404).json({ error: "Endpoint nebyl nalezen." }));
   app.use((error, _req, res, _next) => {
     console.error(error);
-    res.status(500).json({
-      error: env.nodeEnv === "production" ? "Interní chyba serveru." : error.message
+    res.status(error.status || 500).json({
+      error: env.nodeEnv === "production" && !error.status ? "Interní chyba serveru." : error.message
     });
   });
   return app;

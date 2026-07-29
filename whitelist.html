@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Whitelist | Deadstone Roleplay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Roboto+Slab:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="whitelist.css">
+</head>
+<body>
+  <nav class="portal-nav"><a href="index.html"><img src="obrazky/logo-transparent.png" alt="Deadstone"></a><div><a class="button button-ghost" href="pravidla/index.html">Pravidla</a><a class="button button-small" href="index.html">Zpět na web</a></div></nav>
+  <header class="portal-header"><p class="eyebrow">Úřad státu Deadstone</p><h1>Whitelist</h1><p>Vstupní listina pro nové obyvatele · 1899</p></header>
+  <main class="portal-main shell">
+    <div id="wl-message" class="message" hidden></div>
+    <div class="portal-grid">
+      <aside class="portal-card">
+        <h2>Stav žádosti</h2><div id="wl-status"></div>
+        <h2>Pokusy formuláře</h2><div class="attempts" id="form-attempts"></div>
+        <h2>Pokusy pohovoru</h2><div class="attempts" id="interview-attempts"></div>
+        <div class="history" id="wl-history"></div>
+      </aside>
+      <section class="portal-card" id="wl-content"><p>Načítám údaje z úřadu…</p></section>
+    </div>
+  </main>
+  <script src="web-config.js"></script><script src="whitelist.js"></script>
+</body>
+</html>
