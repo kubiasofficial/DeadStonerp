@@ -23,6 +23,7 @@ Discord údaje získáte v Discord Developer Portal:
 - `DISCORD_CLIENT_ID` je Application ID,
 - `DISCORD_GUILD_ID` je ID serveru,
 - `DISCORD_ADMIN_ROLE_ID` je volitelná správcovská role.
+- `DISCORD_AUTO_ROLE_ID` je role automaticky přidělená novým členům.
 
 ## 2. Firestore
 

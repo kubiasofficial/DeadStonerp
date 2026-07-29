@@ -22,6 +22,7 @@ export const env = {
   discordClientId: process.env.DISCORD_CLIENT_ID || "",
   discordGuildId: process.env.DISCORD_GUILD_ID || "",
   discordAdminRoleId: process.env.DISCORD_ADMIN_ROLE_ID || "",
+  discordAutoRoleId: process.env.DISCORD_AUTO_ROLE_ID || "",
   firebaseProjectId: process.env.FIREBASE_PROJECT_ID || "",
   firebaseClientEmail: process.env.FIREBASE_CLIENT_EMAIL || "",
   firebasePrivateKey: (process.env.FIREBASE_PRIVATE_KEY || "").replace(/\\n/g, "\n")

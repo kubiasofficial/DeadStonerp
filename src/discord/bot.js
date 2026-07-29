@@ -66,10 +66,30 @@ async function publishNews(interaction) {
 }
 
 export function createDiscordBot() {
-  const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+  const client = new Client({
+    intents: [
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.GuildMembers
+    ]
+  });
 
   client.once(Events.ClientReady, readyClient => {
     console.log(`Discord bot přihlášen jako ${readyClient.user.tag}`);
+  });
+
+  client.on(Events.GuildMemberAdd, async member => {
+    if (!env.discordAutoRoleId || member.user.bot) return;
+    try {
+      const role = await member.guild.roles.fetch(env.discordAutoRoleId);
+      if (!role) {
+        console.error(`Automatická role ${env.discordAutoRoleId} nebyla nalezena.`);
+        return;
+      }
+      await member.roles.add(role, "Automatická role při vstupu na Deadstone Discord");
+      console.log(`Role ${role.name} přidána uživateli ${member.user.tag}.`);
+    } catch (error) {
+      console.error(`Automatickou roli se nepodařilo přidat uživateli ${member.user.tag}:`, error);
+    }
   });
 
   client.on(Events.InteractionCreate, async interaction => {
