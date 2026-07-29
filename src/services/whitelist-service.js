@@ -187,13 +187,17 @@ async function sendWebhook(url, embed) {
   }
 }
 
-async function sendChannelEmbed(channelId, embed) {
+async function sendChannelEmbed(channelId, embed, mentionedUserId = "") {
   if (!channelId || !env.discordToken) return false;
   try {
     const response = await fetch(`${DISCORD_API}/channels/${channelId}/messages`, {
       method: "POST",
       headers: { Authorization: `Bot ${env.discordToken}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ embeds: [embed] })
+      body: JSON.stringify({
+        content: mentionedUserId ? `<@${mentionedUserId}>` : undefined,
+        embeds: [embed],
+        allowed_mentions: mentionedUserId ? { users: [mentionedUserId] } : { parse: [] }
+      })
     });
     if (!response.ok) console.error(`Discord zprávu do kanálu se nepodařilo odeslat (${response.status}).`);
     return response.ok;
@@ -263,13 +267,13 @@ export async function requestInterview(user) {
   const interviewEmbed = {
     color: 0xA66B2B,
     title: "Žádost o pohovor",
-    description: `Občan **${user.username}** žádá o výslech ohledně vstupu do státu.`,
+    description: `Občan <@${user.id}> (**${user.username}**) žádá o výslech ohledně vstupu do státu.`,
     fields: [{ name: "Pokus", value: `${attempt}/3`, inline: true }],
     footer: { text: "Deadstone Roleplay · Whitelist" },
     timestamp: new Date().toISOString()
   };
   if (env.discordInterviewChannelId) {
-    await sendChannelEmbed(env.discordInterviewChannelId, interviewEmbed);
+    await sendChannelEmbed(env.discordInterviewChannelId, interviewEmbed, user.id);
   } else {
     await sendWebhook(env.discordInterviewWebhook, interviewEmbed);
   }
@@ -331,6 +335,16 @@ async function changeDiscordRole(discordId, roleId, method) {
 export async function decideInterview(interviewId, admin, decision, reason = "") {
   if (!["approved", "rejected"].includes(decision)) throw Object.assign(new Error("Neplatný verdikt."), { status: 400 });
   const ref = db.collection("whitelistInterviews").doc(interviewId);
+  const existingSnapshot = await ref.get();
+  if (!existingSnapshot.exists) throw Object.assign(new Error("Pohovor nebyl nalezen."), { status: 404 });
+  const existing = existingSnapshot.data();
+  if (existing.status === decision) {
+    if (decision === "approved") {
+      await changeDiscordRole(existing.discordId, env.discordApprovedRoleId, "PUT");
+      await changeDiscordRole(existing.discordId, env.discordAutoRoleId, "DELETE");
+    }
+    return { id: interviewId, status: decision, alreadyCompleted: true };
+  }
   let interview;
   await db.runTransaction(async transaction => {
     const snapshot = await transaction.get(ref);
@@ -362,15 +376,20 @@ export async function decideInterview(interviewId, admin, decision, reason = "")
     await changeDiscordRole(interview.discordId, env.discordAutoRoleId, "DELETE");
   }
   const approved = decision === "approved";
-  await sendWebhook(env.discordWhitelistWebhook, {
+  const decisionEmbed = {
     color: approved ? 0x4F7B45 : 0x8A2D22,
     title: approved ? "Platný list ke vstupu" : "Vstup do státu zamítnut",
     description: approved
-      ? `**${interview.discordName}** právě vstupuje do státu s platným listem!`
-      : `**${interview.discordName}** právě usedl na loď a odplouvá. Vstup do státu mu byl zamítnut!`,
+      ? `<@${interview.discordId}> (**${interview.discordName}**) právě vstupuje do státu s platným listem!`
+      : `<@${interview.discordId}> (**${interview.discordName}**) právě usedl na loď a odplouvá. Vstup do státu mu byl zamítnut!`,
     footer: { text: "Deadstone Roleplay · 1899" },
     timestamp: new Date().toISOString()
-  });
+  };
+  if (env.discordDecisionChannelId) {
+    await sendChannelEmbed(env.discordDecisionChannelId, decisionEmbed, interview.discordId);
+  } else {
+    await sendWebhook(env.discordWhitelistWebhook, decisionEmbed);
+  }
   return { id: interviewId, status: decision };
 }
 
