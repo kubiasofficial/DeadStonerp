@@ -29,6 +29,7 @@ export const env = {
   discordApprovedRoleId: process.env.DISCORD_APPROVED_ROLE_ID || "1531978138459050144",
   discordWhitelistWebhook: process.env.DISCORD_WHITELIST_WEBHOOK || "",
   discordInterviewWebhook: process.env.DISCORD_INTERVIEW_WEBHOOK || "",
+  discordInterviewChannelId: process.env.DISCORD_INTERVIEW_CHANNEL_ID || "1532064600265195571",
   discordRedirectUri: process.env.DISCORD_REDIRECT_URI || "http://localhost:3000/api/auth/discord/callback",
   sessionSecret: process.env.SESSION_SECRET || "",
   firebaseProjectId: process.env.FIREBASE_PROJECT_ID || "",

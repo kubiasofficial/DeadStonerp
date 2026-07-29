@@ -176,6 +176,19 @@ async function sendWebhook(url, embed) {
   return response.ok;
 }
 
+async function sendChannelEmbed(channelId, embed) {
+  if (!channelId || !env.discordToken) return false;
+  const response = await fetch(`${DISCORD_API}/channels/${channelId}/messages`, {
+    method: "POST",
+    headers: { Authorization: `Bot ${env.discordToken}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ embeds: [embed] })
+  });
+  if (!response.ok) {
+    console.error(`Discord zprávu do kanálu se nepodařilo odeslat (${response.status}).`);
+  }
+  return response.ok;
+}
+
 export async function decideApplication(applicationId, admin, decision, reason = "") {
   if (!["approved", "rejected"].includes(decision)) throw Object.assign(new Error("Neplatný verdikt."), { status: 400 });
   if (decision === "rejected" && String(reason).trim().length < 3) {
@@ -233,14 +246,19 @@ export async function requestInterview(user) {
     requestedAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp()
   });
-  await sendWebhook(env.discordInterviewWebhook, {
+  const interviewEmbed = {
     color: 0xA66B2B,
     title: "Žádost o pohovor",
     description: `Občan **${user.username}** žádá o výslech ohledně vstupu do státu.`,
     fields: [{ name: "Pokus", value: `${attempt}/3`, inline: true }],
     footer: { text: "Deadstone Roleplay · Whitelist" },
     timestamp: new Date().toISOString()
-  });
+  };
+  if (env.discordInterviewChannelId) {
+    await sendChannelEmbed(env.discordInterviewChannelId, interviewEmbed);
+  } else {
+    await sendWebhook(env.discordInterviewWebhook, interviewEmbed);
+  }
   return { id: ref.id, attempt, status: "waiting" };
 }
 
