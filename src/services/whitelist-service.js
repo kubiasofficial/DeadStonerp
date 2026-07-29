@@ -151,42 +151,56 @@ export async function claimApplication(applicationId, admin) {
 }
 
 async function sendDiscordDm(discordId, content) {
-  const channelResponse = await fetch(`${DISCORD_API}/users/@me/channels`, {
-    method: "POST",
-    headers: { Authorization: `Bot ${env.discordToken}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ recipient_id: discordId })
-  });
-  if (!channelResponse.ok) return false;
-  const channel = await channelResponse.json();
-  const response = await fetch(`${DISCORD_API}/channels/${channel.id}/messages`, {
-    method: "POST",
-    headers: { Authorization: `Bot ${env.discordToken}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ content })
-  });
-  return response.ok;
+  try {
+    const channelResponse = await fetch(`${DISCORD_API}/users/@me/channels`, {
+      method: "POST",
+      headers: { Authorization: `Bot ${env.discordToken}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ recipient_id: discordId })
+    });
+    if (!channelResponse.ok) return false;
+    const channel = await channelResponse.json();
+    const response = await fetch(`${DISCORD_API}/channels/${channel.id}/messages`, {
+      method: "POST",
+      headers: { Authorization: `Bot ${env.discordToken}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ content })
+    });
+    return response.ok;
+  } catch (error) {
+    console.error("Discord soukromou zprávu se nepodařilo odeslat:", error.message);
+    return false;
+  }
 }
 
 async function sendWebhook(url, embed) {
   if (!url) return false;
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ embeds: [embed] })
-  });
-  return response.ok;
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ embeds: [embed] })
+    });
+    if (!response.ok) console.error(`Discord webhook odmítl zprávu (${response.status}).`);
+    return response.ok;
+  } catch (error) {
+    console.error("Discord webhook se nepodařilo odeslat:", error.message);
+    return false;
+  }
 }
 
 async function sendChannelEmbed(channelId, embed) {
   if (!channelId || !env.discordToken) return false;
-  const response = await fetch(`${DISCORD_API}/channels/${channelId}/messages`, {
-    method: "POST",
-    headers: { Authorization: `Bot ${env.discordToken}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ embeds: [embed] })
-  });
-  if (!response.ok) {
-    console.error(`Discord zprávu do kanálu se nepodařilo odeslat (${response.status}).`);
+  try {
+    const response = await fetch(`${DISCORD_API}/channels/${channelId}/messages`, {
+      method: "POST",
+      headers: { Authorization: `Bot ${env.discordToken}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ embeds: [embed] })
+    });
+    if (!response.ok) console.error(`Discord zprávu do kanálu se nepodařilo odeslat (${response.status}).`);
+    return response.ok;
+  } catch (error) {
+    console.error("Discord zprávu do kanálu se nepodařilo odeslat:", error.message);
+    return false;
   }
-  return response.ok;
 }
 
 export async function decideApplication(applicationId, admin, decision, reason = "") {

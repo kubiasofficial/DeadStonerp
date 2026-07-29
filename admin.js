@@ -99,22 +99,32 @@ async function decideApplication(button) {
   const rejected = button.dataset.decision === "rejected";
   const reason = rejected ? prompt("Uveď důvod zamítnutí:") : "";
   if (rejected && !reason) return;
-  await api(`/api/admin/whitelist/applications/${button.dataset.application}`, {
-    method: "PATCH", body: JSON.stringify({ decision: button.dataset.decision, reason })
-  });
-  notify(rejected ? "Žádost byla zamítnuta." : "Žádost byla schválena.");
-  load();
+  button.disabled = true;
+  try {
+    await api(`/api/admin/whitelist/applications/${button.dataset.application}`, {
+      method: "PATCH", body: JSON.stringify({ decision: button.dataset.decision, reason })
+    });
+    notify(rejected ? "Žádost byla zamítnuta." : "Žádost byla schválena.");
+    load();
+  } finally {
+    button.disabled = false;
+  }
 }
 
 async function decideInterview(button) {
   const rejected = button.dataset.decision === "rejected";
   const reason = rejected ? prompt("Uveď důvod zamítnutí pohovoru:") : "";
   if (rejected && !reason) return;
-  await api(`/api/admin/whitelist/interviews/${button.dataset.interview}`, {
-    method: "PATCH", body: JSON.stringify({ decision: button.dataset.decision, reason })
-  });
-  notify(rejected ? "Pohovor byl zamítnut." : "Pohovor byl schválen a Discord role změněny.");
-  load();
+  button.disabled = true;
+  try {
+    await api(`/api/admin/whitelist/interviews/${button.dataset.interview}`, {
+      method: "PATCH", body: JSON.stringify({ decision: button.dataset.decision, reason })
+    });
+    notify(rejected ? "Pohovor byl zamítnut." : "Pohovor byl schválen a Discord role změněny.");
+    load();
+  } finally {
+    button.disabled = false;
+  }
 }
 
 function bindActions() {
