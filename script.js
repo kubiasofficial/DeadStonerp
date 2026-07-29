@@ -121,7 +121,9 @@ async function loadDiscordSession() {
     const profile = document.querySelector(".discord-profile");
     const whitelist = document.querySelector(".whitelist-link");
     if (!profile || !user) return;
-    document.querySelector(".nav-join")?.setAttribute("hidden", "");
+    document.querySelectorAll(".discord-login").forEach(link => {
+      link.setAttribute("hidden", "");
+    });
     profile.hidden = false;
     profile.querySelector("img").src = user.avatar;
     profile.querySelector("img").alt = `Profilový obrázek ${user.username}`;
