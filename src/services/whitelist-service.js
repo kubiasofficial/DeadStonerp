@@ -268,6 +268,27 @@ export async function listAdminInterviews(status = "waiting") {
   return snapshot.docs.map(serialize).sort((a, b) => new Date(b.requestedAt) - new Date(a.requestedAt));
 }
 
+export async function listGrantedAccess() {
+  const snapshot = await db.collection("whitelistProfiles")
+    .where("completed", "==", true).limit(100).get();
+  return Promise.all(snapshot.docs.map(async profileDoc => {
+    const profile = profileDoc.data();
+    const userDoc = await db.collection("discordUsers").doc(profileDoc.id).get();
+    const user = userDoc.data() || {};
+    const interviewSnapshot = await db.collection("whitelistInterviews")
+      .where("discordId", "==", profileDoc.id).limit(50).get();
+    const approved = interviewSnapshot.docs
+      .filter(doc => doc.data().status === "approved")
+      .sort((a, b) => (b.data().decidedAt?.toMillis?.() || 0) - (a.data().decidedAt?.toMillis?.() || 0))[0]?.data() || {};
+    return {
+      discordId: profileDoc.id,
+      discordName: profile.discordName || approved.discordName || user.globalName || user.username || profileDoc.id,
+      avatar: profile.avatar || approved.avatar || null,
+      completedAt: profile.completedAt?.toDate?.().toISOString?.() || approved.decidedAt?.toDate?.().toISOString?.() || null
+    };
+  }));
+}
+
 export async function claimInterview(interviewId, admin) {
   const ref = db.collection("whitelistInterviews").doc(interviewId);
   await db.runTransaction(async transaction => {
@@ -316,6 +337,9 @@ export async function decideInterview(interviewId, admin, decision, reason = "")
     transaction.set(profileRef, {
       interviewAttemptsRemaining: Math.max(0, (profile.interviewAttemptsRemaining ?? 3) - 1),
       completed: decision === "approved",
+      discordName: interview.discordName,
+      avatar: interview.avatar || null,
+      completedAt: decision === "approved" ? FieldValue.serverTimestamp() : null,
       updatedAt: FieldValue.serverTimestamp()
     }, { merge: true });
   });
@@ -334,6 +358,50 @@ export async function decideInterview(interviewId, admin, decision, reason = "")
     timestamp: new Date().toISOString()
   });
   return { id: interviewId, status: decision };
+}
+
+export async function revokeAccess(discordId, admin) {
+  const profileRef = db.collection("whitelistProfiles").doc(discordId);
+  const profileSnapshot = await profileRef.get();
+  if (!profileSnapshot.exists || !profileSnapshot.data().completed) {
+    throw Object.assign(new Error("Hráč nemá aktivní plný přístup."), { status: 404 });
+  }
+
+  const [applications, interviews] = await Promise.all([
+    db.collection("whitelistApplications").where("discordId", "==", discordId).limit(100).get(),
+    db.collection("whitelistInterviews").where("discordId", "==", discordId).limit(100).get()
+  ]);
+  const batch = db.batch();
+  batch.set(profileRef, {
+    completed: false,
+    completedAt: null,
+    formAttemptsRemaining: 3,
+    interviewAttemptsRemaining: 3,
+    revokedBy: admin.id,
+    revokedByName: admin.username,
+    revokedAt: FieldValue.serverTimestamp(),
+    updatedAt: FieldValue.serverTimestamp()
+  }, { merge: true });
+  applications.docs.filter(doc => ["approved", "claimed", "pending"].includes(doc.data().status))
+    .forEach(doc => batch.update(doc.ref, {
+      status: "access_revoked",
+      revokedBy: admin.id,
+      revokedAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp()
+    }));
+  interviews.docs.filter(doc => ["approved", "claimed", "waiting"].includes(doc.data().status))
+    .forEach(doc => batch.update(doc.ref, {
+      status: "access_revoked",
+      revokedBy: admin.id,
+      revokedAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp()
+    }));
+  await batch.commit();
+
+  await changeDiscordRole(discordId, env.discordAutoRoleId, "PUT");
+  await changeDiscordRole(discordId, env.discordApprovedRoleId, "DELETE");
+  await sendDiscordDm(discordId, "Tvůj vstupní list do státu Deadstone byl administrací odebrán. Pro opětovný vstup musíš znovu projít whitelistovým formulářem a pohovorem.");
+  return { discordId, completed: false, formAttemptsRemaining: 3, interviewAttemptsRemaining: 3 };
 }
 
 export async function adjustAttempts(discordId, type, amount) {

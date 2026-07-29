@@ -31,7 +31,8 @@ function attempts(element, remaining) {
 
 const labels = {
   pending: "Čeká na vyhodnocení", approved: "Schváleno", rejected: "Zamítnuto",
-  waiting: "Čeká na převzetí", claimed: "Převzato administrátorem", expired: "Žádost vypršela"
+  waiting: "Čeká na převzetí", claimed: "Převzato administrátorem", expired: "Žádost vypršela",
+  access_revoked: "Přístup odebrán"
 };
 
 function renderForm(data) {

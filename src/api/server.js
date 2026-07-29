@@ -12,8 +12,8 @@ import { requireAdmin, requireDiscordAdmin, requireSession } from "./middleware.
 import { registerDiscordAuth } from "./discord-auth.js";
 import {
   adjustAttempts, claimApplication, claimInterview, decideApplication, decideInterview,
-  getPlayerWhitelist, listAdminApplications, listAdminInterviews,
-  requestInterview, submitApplication
+  getPlayerWhitelist, listAdminApplications, listAdminInterviews, listGrantedAccess,
+  requestInterview, revokeAccess, submitApplication
 } from "../services/whitelist-service.js";
 
 export function createApiServer() {
@@ -97,6 +97,16 @@ export function createApiServer() {
 
   app.patch("/api/admin/whitelist/attempts/:discordId", requireDiscordAdmin, async (req, res, next) => {
     try { res.json({ data: await adjustAttempts(req.params.discordId, req.body.type, req.body.amount) }); }
+    catch (error) { next(error); }
+  });
+
+  app.get("/api/admin/whitelist/access", requireDiscordAdmin, async (_req, res, next) => {
+    try { res.json({ data: await listGrantedAccess() }); }
+    catch (error) { next(error); }
+  });
+
+  app.post("/api/admin/whitelist/access/:discordId/revoke", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await revokeAccess(req.params.discordId, req.user) }); }
     catch (error) { next(error); }
   });
 
