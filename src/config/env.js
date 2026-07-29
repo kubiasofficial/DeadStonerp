@@ -25,7 +25,7 @@ export const env = {
   discordAdminRoleId: process.env.DISCORD_ADMIN_ROLE_ID || "",
   discordAutoRoleId: process.env.DISCORD_AUTO_ROLE_ID || "",
   discordOwnerId: process.env.DISCORD_OWNER_ID || "1531972762065829938",
-  discordRedirectUri: process.env.DISCORD_REDIRECT_URI || "http://localhost:3000/auth/discord/callback",
+  discordRedirectUri: process.env.DISCORD_REDIRECT_URI || "http://localhost:3000/api/auth/discord/callback",
   sessionSecret: process.env.SESSION_SECRET || "",
   firebaseProjectId: process.env.FIREBASE_PROJECT_ID || "",
   firebaseClientEmail: process.env.FIREBASE_CLIENT_EMAIL || "",

@@ -61,7 +61,7 @@ function avatarUrl(user) {
 }
 
 export function registerDiscordAuth(app) {
-  app.get("/auth/discord", (_req, res) => {
+  app.get("/api/auth/discord", (_req, res) => {
     if (!env.discordClientId || !env.discordClientSecret || !env.sessionSecret) {
       return res.status(503).send("Discord přihlášení zatím není nakonfigurováno.");
     }
@@ -78,7 +78,7 @@ export function registerDiscordAuth(app) {
     res.redirect(`https://discord.com/oauth2/authorize?${query}`);
   });
 
-  app.get("/auth/discord/callback", async (req, res, next) => {
+  app.get("/api/auth/discord/callback", async (req, res, next) => {
     try {
       const state = cookies(req).deadstone_oauth_state;
       res.clearCookie("deadstone_oauth_state", cookieOptions(0));

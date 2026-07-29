@@ -112,7 +112,7 @@ async function loadDiscordSession() {
   const apiBase = window.DEADSTONE_CONFIG?.apiBase?.replace(/\/$/, "");
   if (!apiBase) return;
   document.querySelectorAll(".discord-login").forEach(link => {
-    link.href = `${apiBase}/auth/discord`;
+    link.href = `${apiBase}/api/auth/discord`;
   });
   try {
     const response = await fetch(`${apiBase}/api/auth/me`, { credentials: "include" });
