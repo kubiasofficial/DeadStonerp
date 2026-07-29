@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Veřejný web čte data přes backend API. Přímý klientský přístup je
+    // ve výchozím stavu zakázaný; Admin SDK tato pravidla bezpečně obchází.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

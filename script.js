@@ -24,6 +24,10 @@ const icon = (symbol, label, value, className = "") => `
     <span><small>${label}</small><strong>${value}</strong></span>
   </div>`;
 
+const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, character => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+})[character]);
+
 const statusPanel = document.querySelector("#server-status");
 if (statusPanel) {
   statusPanel.innerHTML =
@@ -51,6 +55,58 @@ if (townList) {
       <div><h3>${item.name}</h3><p>${item.text}</p></div>
     </article>`).join("");
 }
+
+async function loadLiveData() {
+  const apiBase = window.DEADSTONE_CONFIG?.apiBase?.replace(/\/$/, "");
+  if (!apiBase) return;
+  try {
+    const [siteResponse, newsResponse, townsResponse] = await Promise.all([
+      fetch(`${apiBase}/api/site`),
+      fetch(`${apiBase}/api/news?limit=3`),
+      fetch(`${apiBase}/api/towns?limit=4`)
+    ]);
+    if (!siteResponse.ok || !newsResponse.ok || !townsResponse.ok) {
+      throw new Error("API není dostupné.");
+    }
+    const [{ data: site }, { data: liveNews }, { data: liveTowns }] = await Promise.all([
+      siteResponse.json(),
+      newsResponse.json(),
+      townsResponse.json()
+    ]);
+
+    if (site && statusPanel) {
+      const online = site.status === "online";
+      const statusLabel = online ? "Online" : site.status === "maintenance" ? "Údržba" : "Offline";
+      statusPanel.innerHTML =
+        icon("●", "Status serveru", statusLabel, online ? "online" : "") +
+        icon("♟", "Hráčů online", `${site.playersOnline ?? 0} / ${site.playersMax ?? 128}`) +
+        icon("⚙", "Verze serveru", site.version || serverData.version) +
+        icon("◷", "Poslední restart", site.lastRestart || serverData.restart) +
+        `<a class="button button-small status-button" href="${site.connectUrl || "#"}"><span aria-hidden="true">♞</span> Připojit se</a>`;
+    }
+
+    if (liveNews?.length && newsList) {
+      newsList.innerHTML = liveNews.map((item, index) => `
+        <article class="list-item">
+          <div class="thumb" style="--position:${news[index % news.length].position}"></div>
+          <div><time>${item.publishedAt ? new Date(item.publishedAt).toLocaleDateString("cs-CZ") : ""}</time><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.text)}</p></div>
+        </article>`).join("");
+    }
+
+    if (liveTowns?.length && townList) {
+      townList.innerHTML = liveTowns.map((item, index) => `
+        <article class="list-item town">
+          <div class="thumb" style="--position:${towns[index % towns.length].position}"></div>
+          <div><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.text)}</p></div>
+        </article>`).join("");
+    }
+    document.documentElement.dataset.live = "true";
+  } catch (error) {
+    console.info("Deadstone API není dostupné, používám lokální obsah.", error.message);
+  }
+}
+
+loadLiveData();
 
 const toggle = document.querySelector(".menu-toggle");
 const menu = document.querySelector(".nav-menu");

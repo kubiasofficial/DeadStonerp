@@ -1,0 +1,26 @@
+{
+  "name": "deadstone-roleplay-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Společný backend, Firebase vrstva a Discord bot pro Deadstone Roleplay.",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "deploy-commands": "node src/discord/deploy-commands.js",
+    "seed": "node src/scripts/seed-firestore.js",
+    "check": "node --check src/index.js && node --check src/api/server.js && node --check src/discord/bot.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "discord.js": "^14.21.0",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "firebase-admin": "^13.4.0",
+    "helmet": "^8.1.0"
+  }
+}
