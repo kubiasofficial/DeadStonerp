@@ -1,0 +1,26 @@
+@import url("whitelist.css");
+body { background: #070605; }
+body::before { content:""; position:fixed; inset:0; z-index:-2; background:linear-gradient(90deg,rgba(4,4,4,.88),rgba(6,5,4,.55),rgba(4,4,4,.78)),url("obrazky/podpora-urad-1899.png") center/cover fixed; animation: support-breathe 16s ease-in-out infinite alternate; }
+body::after { content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; background:radial-gradient(circle at 72% 58%,#b26a1b20,transparent 26%),linear-gradient(transparent 65%,#050403e8); }
+.rain { position:fixed; inset:0; pointer-events:none; opacity:.08; background:repeating-linear-gradient(105deg,transparent 0 18px,#9db9c8 19px,transparent 20px 36px); background-size:180% 180%; animation: rain 9s linear infinite; }
+.support-hero { min-height:560px; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:130px 24px 65px; text-align:center; }
+.support-hero h1 { margin:.05em 0; color:#e2bd80; font:clamp(56px,9vw,108px) Rye,serif; text-shadow:0 5px 30px #000,0 0 35px #a4601c55; }
+.support-hero h2 { color:#e3d3b8; font:600 clamp(18px,3vw,30px) Cinzel,serif; }
+.support-hero > p:last-child { max-width:760px; color:#b9aa92; line-height:1.9; }
+.support-shell { width:min(1180px,calc(100% - 32px)); margin:auto; padding:0 0 90px; }
+.limit-warning { margin-bottom:25px; padding:16px 20px; color:#ef9d8b; text-align:center; border:1px solid #8d3427; background:#2a0d09dd; box-shadow:0 0 35px #8d342722; font-weight:600; }
+.category-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.category-card { position:relative; overflow:hidden; min-height:205px; padding:25px; color:#c9b89e; background:linear-gradient(145deg,#20170fef,#0b0907f5); border:1px solid #594025; cursor:pointer; transition:.35s transform,.35s border-color,.35s box-shadow; }
+.category-card::before { content:""; position:absolute; inset:0; background:linear-gradient(110deg,transparent 25%,#d38a3220 50%,transparent 75%); transform:translateX(-120%); transition:.7s; }
+.category-card:hover { transform:translateY(-6px); border-color:#b57935; box-shadow:0 16px 45px #000b,0 0 25px #9d5e2026; }
+.category-card:hover::before { transform:translateX(120%); }
+.category-icon { font-size:28px; }.category-card h3 { color:#e0bd82; font:600 18px Cinzel,serif; }.category-card p { line-height:1.7; }
+.ticket-form { display:grid; gap:15px; max-height:80vh; overflow:auto; padding-right:8px; }
+.ticket-form label { display:grid; gap:7px; color:#d1b27e; font:600 12px Cinzel,serif; text-transform:uppercase; }
+.ticket-form label span { color:#857663; font:400 10px "Roboto Slab"; text-transform:none; }
+.ticket-form input,.ticket-form textarea,.ticket-form select { width:100%; padding:13px; color:#ddd0ba; background:#090806; border:1px solid #513a23; font:14px "Roboto Slab"; }
+.ticket-form textarea { min-height:120px; resize:vertical; }.field-note { padding:12px; color:#ec9582; border-left:2px solid #9d3b2d; background:#260d09; }
+@keyframes support-breathe { from{filter:brightness(.82) saturate(.88);transform:scale(1)} to{filter:brightness(1) saturate(1.05);transform:scale(1.025)} }
+@keyframes rain { to{background-position:-300px 600px} }
+@media(max-width:850px){.category-grid{grid-template-columns:1fr 1fr}.support-hero{min-height:470px}}
+@media(max-width:560px){.category-grid{grid-template-columns:1fr}.portal-nav div{gap:4px}.portal-nav .button{padding:8px}}

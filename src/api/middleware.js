@@ -24,6 +24,7 @@ export async function requireDiscordAdmin(req, res, next) {
       return res.status(403).json({ error: "Nemáte administrátorskou roli." });
     }
     req.user = session;
+    req.user.roles = member.roles || [];
     req.discordMember = member;
     next();
   } catch (error) {

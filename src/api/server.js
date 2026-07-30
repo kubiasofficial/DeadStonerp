@@ -25,6 +25,12 @@ import {
   updateMyCharacter
 } from "../services/character-service.js";
 import { getLeadership } from "../services/leadership-service.js";
+import {
+  addMessage, claimTicket, closeTicket, createFeedback, createTicket, feedbackReputation,
+  getTicket, getTicketSettings, listAdminTickets, listEligibleFactionMembers, listFeedback,
+  listMyFactionInvitations, respondFactionInvitation,
+  listMyTickets, prepareTicketUpload, setPriority, transferTicket, updateTicketSettings
+} from "../services/ticket-service.js";
 
 export function createApiServer() {
   const app = express();
@@ -34,7 +40,7 @@ export function createApiServer() {
     origin: env.publicOrigin.split(",").map(value => value.trim()),
     credentials: true
   }));
-  app.use(express.json({ limit: "7mb" }));
+  app.use(express.json({ limit: "48mb" }));
   registerDiscordAuth(app);
 
   app.get("/api/health", (_req, res) => {
@@ -64,6 +70,106 @@ export function createApiServer() {
       res.set("Cache-Control", "public, max-age=60, s-maxage=300");
       res.json({ data: await getLeadership() });
     } catch (error) { next(error); }
+  });
+
+  app.get("/api/support/faction-members", requireSession, async (_req, res, next) => {
+    try { res.json({ data: await listEligibleFactionMembers() }); }
+    catch (error) { next(error); }
+  });
+
+  app.get("/api/support/faction-invitations", requireSession, async (req, res, next) => {
+    try { res.json({ data: await listMyFactionInvitations(req.user.id) }); }
+    catch (error) { next(error); }
+  });
+
+  app.patch("/api/support/faction-invitations/:id", requireSession, async (req, res, next) => {
+    try { res.json({ data: await respondFactionInvitation(req.user, req.params.id, req.body.response) }); }
+    catch (error) { next(error); }
+  });
+
+  app.post("/api/tickets", requireSession, async (req, res, next) => {
+    try { res.status(201).json({ data: await createTicket(req.user, req.body) }); }
+    catch (error) { next(error); }
+  });
+
+  app.post("/api/tickets/upload", requireSession, async (req, res, next) => {
+    try { res.json({ data: await prepareTicketUpload(req.user, req.body) }); }
+    catch (error) { next(error); }
+  });
+
+  app.get("/api/tickets/mine", requireSession, async (req, res, next) => {
+    try { res.json({ data: await listMyTickets(req.user.id) }); }
+    catch (error) { next(error); }
+  });
+
+  app.get("/api/tickets/:id", requireSession, async (req, res, next) => {
+    try { res.json({ data: await getTicket(req.params.id, req.user, false) }); }
+    catch (error) { next(error); }
+  });
+
+  app.post("/api/tickets/:id/messages", requireSession, async (req, res, next) => {
+    try { res.status(201).json({ data: await addMessage(req.params.id, req.user, req.body, false) }); }
+    catch (error) { next(error); }
+  });
+
+  app.post("/api/feedback", requireSession, async (req, res, next) => {
+    try { res.status(201).json({ data: await createFeedback(req.user, req.body) }); }
+    catch (error) { next(error); }
+  });
+
+  app.get("/api/admin/tickets", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await listAdminTickets(req.user, req.user.roles, String(req.query.status || "waiting")) }); }
+    catch (error) { next(error); }
+  });
+
+  app.get("/api/admin/tickets/settings", requireDiscordAdmin, async (_req, res, next) => {
+    try { res.json({ data: await getTicketSettings() }); }
+    catch (error) { next(error); }
+  });
+
+  app.patch("/api/admin/tickets/settings", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await updateTicketSettings(req.user, req.body.access) }); }
+    catch (error) { next(error); }
+  });
+
+  app.get("/api/admin/tickets/reputation", requireDiscordAdmin, async (_req, res, next) => {
+    try { res.json({ data: await feedbackReputation() }); }
+    catch (error) { next(error); }
+  });
+
+  app.get("/api/admin/tickets/feedback", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await listFeedback(req.user.roles) }); }
+    catch (error) { next(error); }
+  });
+
+  app.get("/api/admin/tickets/:id", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await getTicket(req.params.id, req.user, true) }); }
+    catch (error) { next(error); }
+  });
+
+  app.post("/api/admin/tickets/:id/claim", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await claimTicket(req.params.id, req.user, req.user.roles, Boolean(req.body.force)) }); }
+    catch (error) { next(error); }
+  });
+
+  app.post("/api/admin/tickets/:id/messages", requireDiscordAdmin, async (req, res, next) => {
+    try { res.status(201).json({ data: await addMessage(req.params.id, req.user, req.body, true) }); }
+    catch (error) { next(error); }
+  });
+
+  app.patch("/api/admin/tickets/:id/priority", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await setPriority(req.params.id, req.user, req.body.priority) }); }
+    catch (error) { next(error); }
+  });
+
+  app.patch("/api/admin/tickets/:id/transfer", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await transferTicket(req.params.id, req.user, req.body.assigneeId, req.body.assigneeName) }); }
+    catch (error) { next(error); }
+  });
+
+  app.post("/api/admin/tickets/:id/close", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await closeTicket(req.params.id, req.user, req.body.reason, req.body.message) }); }
+    catch (error) { next(error); }
   });
 
   app.get("/api/characters", requireFullAccess, async (_req, res, next) => {

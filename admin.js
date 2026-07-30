@@ -35,19 +35,106 @@ const interviewTabs = [
 const characterTabs = [
   ["pending", "Čekající"], ["approved", "Schválené"], ["rejected", "Zamítnuté"], ["edited", "Upravené"]
 ];
+const ticketTabs = [
+  ["waiting", "Čekající"], ["in_progress", "Rozjednané"], ["closed", "Uzavřené"]
+];
 
 function renderTabs() {
+  if (["reputation", "feedback", "ticket-settings"].includes(section)) {
+    tabs.innerHTML = `<span class="status-badge">${section === "reputation" ? "Reputace vedení" : section === "feedback" ? "Důvěrná zpětná vazba" : "Oprávnění citlivých ticketů"}</span>`;
+    return;
+  }
   if (section === "access") {
     tabs.innerHTML = `<span class="status-badge approved">Aktivní vstupní listy</span>`;
     return;
   }
-  const values = section === "applications" ? applicationTabs : section === "characters" ? characterTabs : interviewTabs;
+  const values = section === "applications" ? applicationTabs : section === "characters" ? characterTabs : section === "tickets" ? ticketTabs : interviewTabs;
   tabs.innerHTML = values.map(([value, label]) =>
     `<button class="tab ${status === value ? "active" : ""}" data-status="${value}">${label}</button>`).join("");
   tabs.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
     status = button.dataset.status;
     load();
   }));
+}
+
+function ticketCard(item) {
+  const priority = { low: "Nízká", normal: "Běžná", high: "Vysoká", urgent: "Naléhavá" }[item.priority] || item.priority;
+  return `<article class="request-card">
+    <div class="request-head">${item.authorAvatar ? `<img src="${escapeHtml(item.authorAvatar)}" alt="">` : ""}<div><h2>${escapeHtml(item.number)} · ${escapeHtml(item.categoryLabel)}</h2><p>${escapeHtml(item.authorName)} · priorita ${priority}${item.assignedName ? ` · řeší ${escapeHtml(item.assignedName)}` : ""}</p></div></div>
+    <p>${escapeHtml(item.description)}</p>
+    <div class="actions">
+      <button class="button button-ghost" data-ticket-open="${item.id}">Otevřít</button>
+      ${item.status === "waiting" ? `<button class="button" data-ticket-claim="${item.id}">Převzít</button>` : ""}
+    </div>
+  </article>`;
+}
+
+async function openAdminTicket(id) {
+  const item = await api(`/api/admin/tickets/${id}`);
+  list.innerHTML = `<button class="button button-ghost" id="ticket-back">← Zpět</button>
+    <article class="request-card"><p class="eyebrow">${escapeHtml(item.number)} · ${escapeHtml(item.categoryLabel)}</p>
+    <h2>${escapeHtml(item.authorName)}</h2><p>${escapeHtml(item.description)}</p>
+    <div class="actions">
+      <select id="ticket-priority"><option value="low">Nízká</option><option value="normal">Běžná</option><option value="high">Vysoká</option><option value="urgent">Naléhavá</option></select>
+      <button class="button button-ghost" id="save-priority">Uložit prioritu</button>
+      ${!item.assignedTo ? `<button class="button" id="claim-detail">Převzít</button>` : `<button class="button button-ghost" id="transfer-ticket">Předat</button>`}
+    </div></article>
+    <div class="request-list">${(item.messages || []).map(entry => `<article class="request-card ${entry.type === "internal" ? "internal-note" : ""}"><strong>${escapeHtml(entry.authorName)}</strong> ${entry.type === "internal" ? "· INTERNÍ" : ""}<p>${escapeHtml(entry.content)}</p>${(entry.attachments || []).map(file => `<a class="button button-ghost" target="_blank" href="${escapeHtml(file.url)}">${escapeHtml(file.name)}</a>`).join("")}</article>`).join("")}</div>
+    ${item.status !== "closed" ? `<form class="content-editor" id="admin-reply"><h2>Nová zpráva</h2><textarea id="admin-reply-text"></textarea><label><input type="checkbox" id="admin-internal"> Interní poznámka – hráč ji neuvidí</label><div class="actions"><button class="button">Odeslat</button><button type="button" class="button reject" id="close-ticket">Uzavřít ticket</button></div></form>` : ""}
+    <details class="request-card"><summary>Kompletní audit (${(item.audit || []).length})</summary>${(item.audit || []).map(entry => `<p>${escapeHtml(entry.action)} · ${escapeHtml(entry.actorName)}</p>`).join("")}</details>`;
+  document.querySelector("#ticket-back").onclick = load;
+  const priority = document.querySelector("#ticket-priority"); if (priority) priority.value = item.priority;
+  document.querySelector("#save-priority")?.addEventListener("click", async () => {
+    await api(`/api/admin/tickets/${id}/priority`, { method:"PATCH", body:JSON.stringify({ priority: priority.value }) }); notify("Priorita byla změněna.");
+  });
+  document.querySelector("#claim-detail")?.addEventListener("click", async () => {
+    await api(`/api/admin/tickets/${id}/claim`, { method:"POST", body:"{}" }); openAdminTicket(id);
+  });
+  document.querySelector("#transfer-ticket")?.addEventListener("click", async () => {
+    const assigneeId = prompt("Discord ID nového řešitele:"); if (!assigneeId) return;
+    const assigneeName = prompt("Jméno nového řešitele:"); if (!assigneeName) return;
+    await api(`/api/admin/tickets/${id}/transfer`, { method:"PATCH", body:JSON.stringify({ assigneeId, assigneeName }) }); openAdminTicket(id);
+  });
+  document.querySelector("#admin-reply")?.addEventListener("submit", async event => {
+    event.preventDefault(); await api(`/api/admin/tickets/${id}/messages`, { method:"POST", body:JSON.stringify({ content:document.querySelector("#admin-reply-text").value, internal:document.querySelector("#admin-internal").checked }) }); openAdminTicket(id);
+  });
+  document.querySelector("#close-ticket")?.addEventListener("click", async () => {
+    const reason = prompt("Výsledek: resolved / rejected / duplicate / insufficient / player_cancelled / other", "resolved"); if (!reason) return;
+    const closingMessage = prompt("Závěrečná zpráva hráči (volitelné):", "") || "";
+    await api(`/api/admin/tickets/${id}/close`, { method:"POST", body:JSON.stringify({ reason, message:closingMessage }) }); notify("Ticket byl uzavřen."); status="closed"; load();
+  });
+}
+
+function bindTicketActions() {
+  list.querySelectorAll("[data-ticket-open]").forEach(button => button.onclick = () => openAdminTicket(button.dataset.ticketOpen).catch(error => notify(error.message, true)));
+  list.querySelectorAll("[data-ticket-claim]").forEach(button => button.onclick = async () => {
+    try { await api(`/api/admin/tickets/${button.dataset.ticketClaim}/claim`, { method:"POST", body:"{}" }); status="in_progress"; notify("Ticket byl převzat."); load(); }
+    catch (error) { notify(error.message, true); }
+  });
+}
+
+async function renderReputation() {
+  const data = await api("/api/admin/tickets/reputation");
+  list.innerHTML = data.length ? data.map(item => `<article class="request-card"><h2>${escapeHtml(item.name)}</h2><p><span class="status-badge approved">+rep ${item.plus}</span> <span class="status-badge rejected">-rep ${item.minus}</span></p></article>`).join("") : "<p>Zatím nebyla odeslána žádná zpětná vazba.</p>";
+}
+
+async function renderFeedback() {
+  const data = await api("/api/admin/tickets/feedback");
+  list.innerHTML = data.length ? data.map(item => `<article class="request-card"><h2>${escapeHtml(item.targetName)} · ${item.rating === "plus" ? "+rep" : "-rep"}</h2><p>Autor: ${escapeHtml(item.authorName)}</p><p>${escapeHtml(item.note)}</p></article>`).join("") : "<p>Zatím nebyla odeslána žádná zpětná vazba.</p>";
+}
+
+const ticketCategoryLabels = { bug:"Bug Report",player_report:"Nahlášení hráče",ck:"CK Tickety",general:"Obecná pomoc",partnership:"Partnerství",leadership:"Kontakt s vedením",faction:"Žádost o frakci",other:"Ostatní" };
+const adminRoleLabels = {
+  "1531972762065829938":"Owner","1531973545888841870":"Head Administrator","1531974140691480677":"Administrator",
+  "1531974942265180180":"Lead Developer","1531975985820471379":"Developer","1531976340310458408":"WL Adder","1531976917933359244":"Trainee"
+};
+async function renderTicketSettings() {
+  const settings = await api("/api/admin/tickets/settings");
+  list.innerHTML = `<form id="permission-form" class="content-editor"><p>Fajfkou urči, které role smějí vidět a řešit jednotlivé kategorie.</p>${Object.entries(ticketCategoryLabels).map(([key,label])=>`<fieldset class="request-card"><legend>${label}</legend>${Object.entries(adminRoleLabels).map(([id,name])=>`<label><input type="checkbox" data-category-access="${key}" value="${id}" ${(settings.access?.[key]||[]).includes(id)?"checked":""}> ${name}</label>`).join("")}</fieldset>`).join("")}<button class="button">Uložit oprávnění</button></form>`;
+  document.querySelector("#permission-form").onsubmit = async event => {
+    event.preventDefault(); const access={}; document.querySelectorAll("[data-category-access]").forEach(input=>{access[input.dataset.categoryAccess]||=[];if(input.checked)access[input.dataset.categoryAccess].push(input.value)});
+    await api("/api/admin/tickets/settings",{method:"PATCH",body:JSON.stringify({access})});notify("Oprávnění ticketů byla uložena.");
+  };
 }
 
 function answerRows(item) {
@@ -348,6 +435,14 @@ async function load() {
   renderTabs();
   list.innerHTML = "<p>Načítám úřední záznamy…</p>";
   try {
+    if (section === "reputation") { await renderReputation(); return; }
+    if (section === "feedback") { await renderFeedback(); return; }
+    if (section === "ticket-settings") { await renderTicketSettings(); return; }
+    if (section === "tickets") {
+      const data = await api(`/api/admin/tickets?status=${status}`);
+      list.innerHTML = data.length ? data.map(ticketCard).join("") : "<p>V této části nejsou žádné tickety.</p>";
+      bindTicketActions(); return;
+    }
     if (["news", "towns"].includes(section)) {
       const data = await api(`/api/admin/content/${section}`);
       renderContentManager(data);
@@ -378,11 +473,16 @@ document.querySelectorAll("[data-section]").forEach(button => button.addEventLis
   document.querySelectorAll("[data-section]").forEach(item => item.classList.remove("active"));
   button.classList.add("active");
   section = button.dataset.section;
-  status = section === "applications" ? "pending" : section === "interviews" ? "waiting" : section === "characters" ? "pending" : "active";
+  status = section === "applications" ? "pending" : section === "interviews" || section === "tickets" ? "waiting" : section === "characters" ? "pending" : "active";
   load();
 }));
 
 api("/api/auth/me").then(user => {
   if (!user.admin) location.href = "index.html";
-  else load();
+  else {
+    const privileged = user.roles?.some(id => ["1531972762065829938","1531973545888841870"].includes(id));
+    document.querySelectorAll(".owner-only").forEach(button => button.hidden = !privileged);
+    if (user.roles?.includes("1531973545888841870")) document.querySelector('[data-section="ticket-settings"]')?.setAttribute("hidden", "");
+    load();
+  }
 }).catch(() => location.href = `${apiBase}/api/auth/discord`);

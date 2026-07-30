@@ -11,6 +11,7 @@ import {
   getSiteSettings,
   updateSiteSettings
 } from "../services/content-service.js";
+import { archiveExpiredTicketChannels, syncDiscordTicketMessage } from "../services/ticket-service.js";
 
 function isAdmin(interaction) {
   if (interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)) return true;
@@ -69,12 +70,17 @@ export function createDiscordBot() {
   const client = new Client({
     intents: [
       GatewayIntentBits.Guilds,
-      GatewayIntentBits.GuildMembers
+      GatewayIntentBits.GuildMembers,
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.MessageContent
     ]
   });
 
   client.once(Events.ClientReady, readyClient => {
     console.log(`Discord bot přihlášen jako ${readyClient.user.tag}`);
+    archiveExpiredTicketChannels().catch(error => console.error("Archivace ticketů selhala:", error));
+    setInterval(() => archiveExpiredTicketChannels().catch(error =>
+      console.error("Archivace ticketů selhala:", error)), 60 * 60 * 1000).unref();
   });
 
   client.on(Events.GuildMemberAdd, async member => {
@@ -90,6 +96,11 @@ export function createDiscordBot() {
     } catch (error) {
       console.error(`Automatickou roli se nepodařilo přidat uživateli ${member.user.tag}:`, error);
     }
+  });
+
+  client.on(Events.MessageCreate, message => {
+    syncDiscordTicketMessage(message).catch(error =>
+      console.error("Synchronizace Discord ticketu selhala:", error));
   });
 
   client.on(Events.InteractionCreate, async interaction => {

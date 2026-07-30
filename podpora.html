@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Podpora | Deadstone Roleplay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Roboto+Slab:wght@300;400;500&family=Rye&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="podpora.css">
+</head>
+<body>
+  <div class="rain" aria-hidden="true"></div>
+  <nav class="portal-nav"><a href="index.html"><img src="obrazky/logo-transparent.png" alt="Deadstone"></a><div><a class="button button-ghost" href="moje-tickety.html">Moje tickety</a><a class="button button-small" href="index.html">Zpět na web</a></div></nav>
+  <header class="support-hero">
+    <p class="eyebrow">Telegrafní úřad státu Deadstone</p>
+    <h1>Podpora</h1>
+    <h2>Potřebuješ pomoc? Jsme tu pro tebe.</h2>
+    <p>Ať už ses setkal s technickým problémem, chceš nahlásit chybu, obrátit se na administraci nebo máš jiný dotaz, vyber kategorii, která nejlépe odpovídá tvému požadavku.</p>
+  </header>
+  <main class="support-shell">
+    <div class="limit-warning">⚠ Můžeš mít současně maximálně tři otevřené tickety a pouze jeden v každé kategorii.</div>
+    <section id="faction-invitations" class="portal-card" hidden></section>
+    <div id="support-message" class="message" hidden></div>
+    <section class="category-grid" id="category-grid"></section>
+  </main>
+  <dialog class="western-modal" id="ticket-dialog">
+    <form method="dialog" class="dialog-close"><button aria-label="Zavřít">×</button></form>
+    <form id="ticket-form" class="ticket-form">
+      <p class="eyebrow">Nové úřední podání</p><h2 id="ticket-title">Nový ticket</h2>
+      <input type="hidden" id="ticket-category">
+      <div id="dynamic-fields"></div>
+      <label>Podrobný popis <span>alespoň 20 znaků</span><textarea id="ticket-description" maxlength="6000" placeholder="Popiš situaci co nejpřesněji…"></textarea></label>
+      <label>Přílohy <span>max. 5 × 8 MB · JPG, PNG, WEBP, PDF, TXT</span><input id="ticket-files" type="file" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,.txt"></label>
+      <button class="button" type="submit">Odeslat ticket</button>
+    </form>
+  </dialog>
+  <script src="web-config.js"></script><script src="podpora.js"></script>
+</body>
+</html>

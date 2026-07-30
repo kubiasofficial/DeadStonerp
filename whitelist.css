@@ -64,6 +64,9 @@ body { min-height: 100vh; background: linear-gradient(rgba(7,6,5,.86), rgba(7,6,
 .western-modal::backdrop { background: #050403d9; backdrop-filter: blur(4px); }
 .western-modal select { width: 100%; padding: 12px; color: #d5c6ae; background: #0d0c0a; border: 1px solid #4b3823; }
 .dialog-close { position: absolute; top: 8px; right: 10px; }.dialog-close button { color: #c59a66; background: none; border: 0; font-size: 28px; cursor: pointer; }
+.internal-note { border-color: #6b356f; background: linear-gradient(145deg,#211326,#0d090f); }
+.request-card select { padding: 10px; color: #d5c6ae; background: #0d0c0a; border: 1px solid #4b3823; }
+.content-editor fieldset { display:grid; grid-template-columns:repeat(2,1fr); gap:9px; }
 @media (max-width: 760px) {
   .portal-grid, .admin-layout { grid-template-columns: 1fr; }
   .portal-nav { height: 66px; }.portal-nav img { width: 78px; }
