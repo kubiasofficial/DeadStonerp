@@ -7,13 +7,24 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const HOUR_MS = 60 * 60 * 1000;
 
 export const ruleQuestions = [
-  { id: "do", title: "Příkaz /do", question: "Jak bys správně použil příkaz /do? Uveď vlastní příklad." },
-  { id: "me", title: "Příkaz /me", question: "K čemu slouží příkaz /me a co pomocí něj nesmíš ovládat?" },
-  { id: "metagaming", title: "Metagaming", question: "Co je metagaming a jak by ses zachoval, kdybys získal důležitou informaci na Discordu?" },
-  { id: "powergaming", title: "Powergaming", question: "Vysvětli powergaming a popiš správné odzbrojení jiné postavy." },
-  { id: "fearrp", title: "FearRP", question: "Jak se zachová neozbrojená postava obklíčená několika ozbrojenými lidmi?" },
-  { id: "combat-logging", title: "Combat Logging", question: "Co musíš udělat, pokud ti během rozehrané scény spadne hra?" }
+  { id: "respekt", title: "Respekt", question: "Jaký je rozdíl mezi konfliktem postav a konfliktem skutečných hráčů?" },
+  { id: "mikrofon", title: "Používání mikrofonu", question: "Jaké požadavky musí splňovat mikrofon hráče na Deadstone Roleplay?" },
+  { id: "dodrzovani-rp", title: "Dodržování roleplaye", question: "Jak se máš po připojení na server chovat a proč roleplay není soutěž o vítězství?" },
+  { id: "vhodna-postava", title: "Vhodná postava", question: "Jaké vlastnosti má mít uvěřitelná postava zasazená do roku 1899?" },
+  { id: "vyuzivani-chyb", title: "Využívání chyb", question: "Co uděláš, když objevíš chybu hry nebo serveru, která by ti mohla poskytnout výhodu?" },
+  { id: "obchazeni-trestu", title: "Obcházení trestů", question: "Uveď příklad obcházení trestu a vysvětli, proč je takové jednání zakázané." },
+  { id: "neznalost-pravidel", title: "Neznalost pravidel", question: "Omlouvá neznalost pravidel jejich porušení a jak má hráč sledovat jejich změny?" }
 ];
+
+const WHITELIST_QUESTION_COUNT = 5;
+
+function randomRuleQuestions() {
+  return [...ruleQuestions]
+    .map(question => ({ question, order: Math.random() }))
+    .sort((a, b) => a.order - b.order)
+    .slice(0, WHITELIST_QUESTION_COUNT)
+    .map(item => item.question);
+}
 
 function serialize(snapshot) {
   const data = snapshot.data();
@@ -59,7 +70,7 @@ export async function getPlayerWhitelist(discordId) {
     applications: applicationItems,
     interviews: interviewItems,
     nextFormAt,
-    questions: ruleQuestions
+    questions: randomRuleQuestions()
   };
 }
 
@@ -68,9 +79,14 @@ export async function submitApplication(user, input) {
   if (required.some(key => String(input[key] || "").trim().length < 3)) {
     throw Object.assign(new Error("Vyplňte všechny základní otázky."), { status: 400 });
   }
-  if (!Array.isArray(input.ruleAnswers) || input.ruleAnswers.length !== ruleQuestions.length ||
-      input.ruleAnswers.some(answer => String(answer.answer || "").trim().length < 20)) {
-    throw Object.assign(new Error("Každou otázku z pravidel zodpovězte alespoň 20 znaky."), { status: 400 });
+  const allowedQuestionIds = new Set(ruleQuestions.map(question => question.id));
+  const submittedQuestionIds = new Set((input.ruleAnswers || []).map(answer => String(answer.id)));
+  if (!Array.isArray(input.ruleAnswers) || input.ruleAnswers.length !== WHITELIST_QUESTION_COUNT ||
+      submittedQuestionIds.size !== WHITELIST_QUESTION_COUNT ||
+      input.ruleAnswers.some(answer =>
+        !allowedQuestionIds.has(String(answer.id)) ||
+        String(answer.answer || "").trim().length < 20)) {
+    throw Object.assign(new Error("Zodpověz všech 5 náhodně vybraných otázek alespoň 20 znaky."), { status: 400 });
   }
 
   const result = await db.runTransaction(async transaction => {
