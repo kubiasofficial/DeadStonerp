@@ -24,6 +24,7 @@ import {
   deleteCharacter, listAdminCharacters, listApprovedCharacters, listMyCharacters,
   updateMyCharacter
 } from "../services/character-service.js";
+import { getLeadership } from "../services/leadership-service.js";
 
 export function createApiServer() {
   const app = express();
@@ -55,6 +56,13 @@ export function createApiServer() {
   app.get("/api/towns", async (req, res, next) => {
     try {
       res.json({ data: await listPublished("towns", req.query.limit) });
+    } catch (error) { next(error); }
+  });
+
+  app.get("/api/leadership", async (_req, res, next) => {
+    try {
+      res.set("Cache-Control", "public, max-age=60, s-maxage=300");
+      res.json({ data: await getLeadership() });
     } catch (error) { next(error); }
   });
 
