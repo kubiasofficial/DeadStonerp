@@ -41,12 +41,12 @@ async function openCategory(key){
   document.querySelector("#dynamic-fields").innerHTML=html;dialog.showModal();
 }
 grid.querySelectorAll("[data-category]").forEach(button=>button.onclick=()=>openCategory(button.dataset.category));
-async function filesData(files){const selected=[...files];if(selected.length>5)throw new Error("Lze přiložit nejvýše 5 souborů.");if(selected.some(file=>file.size>8*1024*1024))throw new Error("Jeden soubor může mít nejvýše 8 MB.");return Promise.all(selected.map(async file=>{const prepared=await api("/api/tickets/upload",{method:"POST",body:JSON.stringify({name:file.name,mime:file.type,size:file.size})});let upload;try{upload=await fetch(prepared.uploadUrl,{method:"PUT",headers:{"Content-Type":file.type},body:file})}catch{throw new Error("Firebase Storage blokuje nahrávání příloh. Je potřeba jednou povolit CORS pro dead-stonerp.vercel.app.")}if(!upload.ok)throw new Error(`Přílohu ${file.name} se nepodařilo nahrát.`);return prepared.attachment}))}
 document.querySelector("#ticket-form").addEventListener("submit",async event=>{
   event.preventDefault();const button=event.currentTarget.querySelector("button[type=submit]");button.disabled=true;
   try{
     const fields={};document.querySelectorAll("[data-field]").forEach(element=>fields[element.dataset.field]=element.multiple?[...element.selectedOptions].map(o=>o.value):element.value.trim());
-    const result=await api("/api/tickets",{method:"POST",body:JSON.stringify({category:document.querySelector("#ticket-category").value,description:document.querySelector("#ticket-description").value.trim(),fields,attachments:await filesData(document.querySelector("#ticket-files").files)})});
+    fields.attachmentLinks=document.querySelector("#ticket-links").value.split(/\r?\n/).map(value=>value.trim()).filter(Boolean).slice(0,10);
+    const result=await api("/api/tickets",{method:"POST",body:JSON.stringify({category:document.querySelector("#ticket-category").value,description:document.querySelector("#ticket-description").value.trim(),fields,attachments:[]})});
     dialog.close();notify(`Ticket ${result.number} byl úspěšně založen. O změnách tě upozorníme na Discordu.`);event.currentTarget.reset();
   }catch(error){notify(error.message,true)}finally{button.disabled=false}
 });

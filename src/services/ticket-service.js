@@ -227,7 +227,16 @@ export async function createTicket(user, payload) {
     authorId: user.id, authorName: user.username, authorType: "player",
     type: "reply", content: description, attachments, createdAt: now(), source: "web"
   });
-  const ticket = { id: ref.id, number, category, categoryLabel: CATEGORIES[category].label, authorId: user.id, description };
+  const links = Array.isArray(payload.fields?.attachmentLinks)
+    ? payload.fields.attachmentLinks.filter(value => /^https?:\/\//i.test(String(value))).slice(0, 10)
+    : [];
+  if (links.length) {
+    await ref.collection("messages").add({
+      authorId: user.id, authorName: user.username, authorType: "player", type: "reply",
+      content: `Odkazy na důkazy:\n${links.join("\n")}`, attachments: [], createdAt: now(), source: "web"
+    });
+  }
+  const ticket = { id: ref.id, number, category, categoryLabel: CATEGORIES[category].label, authorId: user.id, description: `${description}${links.length ? `\n\nDůkazy:\n${links.join("\n")}` : ""}` };
   try {
     const discordChannelId = await postDiscordTicket(ticket);
     if (discordChannelId) await ref.update({ discordChannelId });
