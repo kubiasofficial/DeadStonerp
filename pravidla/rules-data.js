@@ -308,5 +308,67 @@ window.RULE_CHAPTERS = [
           <ul><li>oznámit CK v L-OOC chatu,</li><li>nahlásit situaci administraci pomocí reportu,</li><li>založit ticket obsahující popis situace a důkazní materiály.</li></ul>`
       }
     ]
+  },
+  {
+    slug: "gross-roleplay",
+    title: "Gross Roleplay",
+    summary: "Pravidla citlivého, ponižujícího a znepokojivého obsahu včetně nezbytného souhlasu všech účastníků.",
+    sections: [
+      {
+        name: "Co je Gross Roleplay",
+        body: `
+          <p><strong>Gross Roleplay (Gross RP)</strong> představuje roleplay obsahující nechutné, ponižující, znepokojivé nebo jinak citlivé situace. Jedná se o typ RP, který může být pro některé hráče nepříjemný, a proto vyžaduje maximální ohleduplnost a respekt vůči všem zúčastněným.</p>
+          <p>Skutečnost, že je postava násilná, psychicky narušená nebo jinak specifická, neopravňuje hráče k porušování těchto pravidel.</p>`
+      },
+      {
+        name: "Příklady Gross RP",
+        body: `
+          <p>Mezi Gross RP může patřit například:</p>
+          <ul><li>mučení,</li><li>sexuální obtěžování,</li><li>ponižování postavy,</li><li>rasově motivované urážky odpovídající době a příběhu,</li><li>nucené holení vlasů nebo vousů,</li><li>jiné obdobně citlivé RP situace.</li></ul>
+          <p>Výčet není konečný. O tom, zda konkrétní situace spadá pod Gross RP, rozhoduje administrace.</p>`
+      },
+      {
+        name: "Přísně zakázané",
+        body: `
+          <aside class="gross-forbidden"><b>Zakázáno za všech okolností</b><p>Následující obsah nelze povolit ani se souhlasem zúčastněných hráčů.</p></aside>
+          <ul class="gross-ban-list">
+            <li>propagace nebo glorifikace extremistických ideologií či skupin,</li>
+            <li>extrémní rasově motivované projevy přesahující rámec dobového RP,</li>
+            <li>kanibalismus,</li><li>znásilnění,</li><li>pedofilie,</li><li>nekrofilie,</li><li>zoofilie,</li>
+            <li>jakékoli jiné sexuálně nebo jinak extrémně zvrácené RP,</li>
+            <li>mučení nebo jiné jednání vedoucí k trvalým následkům na postavě bez pravidly stanovené výjimky.</li>
+          </ul>`
+      },
+      {
+        name: "Podmínky pro Gross RP",
+        body: `
+          <p>Gross RP je možné zahájit pouze při splnění <strong>všech</strong> následujících podmínek:</p>
+          <ol class="consent-steps">
+            <li><span>1</span><div>Všichni přímo zúčastnění hráči udělí souhlas v L-OOC chatu.</div></li>
+            <li><span>2</span><div>Každý hráč má právo Gross RP bez udání důvodu odmítnout.</div></li>
+            <li><span>3</span><div>Pokud se do RP situace zapojí další hráč, může Gross RP pokračovat pouze po jeho výslovném souhlasu v L-OOC chatu.</div></li>
+            <li><span>4</span><div>Do doby udělení souhlasu musí být Gross RP přerušeno nebo upraveno tak, aby již neobsahovalo Gross prvky.</div></li>
+            <li><span>5</span><div>Každý hráč může svůj souhlas kdykoliv odvolat. V takovém případě musí být Gross RP okamžitě ukončeno.</div></li>
+          </ol>
+          <aside class="gross-right"><b>Právo hráče</b><p>Nikdo nesmí být k účasti na Gross RP nucen ani za odmítnutí jakkoli znevýhodněn.</p></aside>`
+      },
+      {
+        name: "Povolené výjimky",
+        body: `
+          <h3>Character Kill (CK)</h3>
+          <p>Při řádně schváleném nebo pravidly povoleném Character Kill mohou být součástí RP i trvalé následky odpovídající dané situaci.</p>
+          <h3>Skalpování</h3>
+          <p>Indiánské kmeny mohou v rámci svého roleplaye skalpovat postavu, která neoprávněně vstoupila na jejich území nebo jinak závažně porušila jejich pravidla.</p>
+          <p>Skalpování nevyžaduje samostatný souhlas hráče, pokud probíhá v souladu s pravidly serveru.</p>
+          <p>Po skalpování je hráč povinen odehrávat ztrátu vlasů. Zakrytí hlavy parukou nebo jiným způsobem je možné pouze po odpovídajícím RP.</p>`
+      },
+      {
+        name: "Právo zásahu administrace",
+        body: `
+          <p>Administrace může kdykoliv Gross RP ukončit, pokud dospěje k závěru, že:</p>
+          <ul><li>překračuje hranici slušného RP,</li><li>je vedeno pouze za účelem šokování ostatních hráčů,</li><li>neslouží příběhu,</li><li>narušuje komfort ostatních hráčů.</li></ul>
+          <p>Rozhodnutí administrace o ukončení Gross RP musí všichni účastníci bezodkladně respektovat.</p>`
+      }
+    ]
   }
 ];

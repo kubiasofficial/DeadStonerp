@@ -36,7 +36,13 @@ export const ruleQuestions = [
   { id: "ck-cizi-postavy", title: "CK cizí postavy", question: "Jaké podmínky musí být splněny před vykonáním CK cizí postavy a jak dlouho schválení platí?" },
   { id: "ck-odvolani", title: "Odvolání proti CK", question: "Do kdy může oběť podat odvolání proti CK a co musí po vykonání CK zůstat na místě?" },
   { id: "selfck", title: "SelfCK", question: "Jaké podmínky platí pro SelfCK a k jakým účelům nesmí být nikdy použito?" },
-  { id: "situacni-ck", title: "Situační CK", question: "Co je Situační CK a proč běžný konflikt nebo jednorázová přestřelka nestačí jako důvod?" }
+  { id: "situacni-ck", title: "Situační CK", question: "Co je Situační CK a proč běžný konflikt nebo jednorázová přestřelka nestačí jako důvod?" },
+  { id: "gross-definice", title: "Gross Roleplay", question: "Co je Gross Roleplay a proč povaha postavy neomlouvá porušování jeho pravidel?" },
+  { id: "gross-souhlas", title: "Souhlas s Gross RP", question: "Jakým způsobem se uděluje souhlas s Gross RP a co se stane, když jej hráč odvolá?" },
+  { id: "gross-novy-hrac", title: "Nový účastník Gross RP", question: "Jak musí skupina postupovat, pokud se do probíhající Gross RP situace zapojí další hráč?" },
+  { id: "gross-zakazane", title: "Zakázaný Gross RP", question: "Uveď alespoň tři druhy obsahu, které jsou zakázané i tehdy, když by s nimi všichni hráči souhlasili." },
+  { id: "gross-vyjimky", title: "Výjimky Gross RP", question: "Jaké výjimky platí pro trvalé následky při CK a pro skalpování indiánskými kmeny?" },
+  { id: "gross-administrace", title: "Zásah administrace", question: "Kdy může administrace Gross RP ukončit a jak musí účastníci na její rozhodnutí reagovat?" }
 ];
 
 const WHITELIST_QUESTION_COUNT = 5;

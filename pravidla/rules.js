@@ -28,7 +28,9 @@ function renderChapter() {
   const chapter = chapters[currentIndex], prev = chapters[currentIndex - 1], next = chapters[currentIndex + 1];
   const criticalNotice = chapter.slug === "character-kill"
     ? `<aside class="ck-critical-notice"><span>☠</span><div><b>Nejdůležitější pravidlo</b><p>Character Kill je nevratný zásah do příběhu postavy. Před jakýmkoliv CK si přečti celou kapitolu a při nejasnosti kontaktuj administraci.</p></div></aside>`
-    : "";
+    : chapter.slug === "gross-roleplay"
+      ? `<aside class="gross-consent-notice"><span>!</span><div><b>Souhlas je vždy rozhodující</b><p>Gross RP lze odmítnout bez udání důvodu. Udělený souhlas může kterýkoliv účastník kdykoliv odvolat a situace musí být okamžitě ukončena.</p></div></aside>`
+      : "";
   document.title = `${chapter.title} | Pravidla Deadstone`;
   document.querySelector("#rules-content").innerHTML = `
     <div class="breadcrumb"><a href="../index.html">Deadstone</a><span>›</span><a href="index.html">Pravidla</a><span>›</span><strong>${chapter.title}</strong></div>

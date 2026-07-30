@@ -176,3 +176,26 @@ body[data-chapter="character-kill"] .rule-section summary h2::before { content:"
 @keyframes ck-shine { 0%,55%{transform:translateX(-100%)} 85%,100%{transform:translateX(100%)} }
 @keyframes ck-warning-pulse { 0%,100%{box-shadow:0 0 0 rgba(153,51,39,0)} 50%{box-shadow:0 0 22px rgba(153,51,39,.15)} }
 @media(max-width:700px){.ck-types{grid-template-columns:1fr}.ck-critical-notice{grid-template-columns:48px 1fr;padding:16px}.ck-critical-notice>span{width:44px;height:44px;font-size:22px}.ck-time-card{grid-template-columns:1fr}.ck-time-card>strong{text-align:left}body[data-chapter="character-kill"] .chapter-header::after{font-size:90px}}
+body[data-chapter="gross-roleplay"]::before { background:linear-gradient(90deg,rgba(7,5,6,.97),rgba(24,10,13,.88)),url("../obrazky/pravidla-podklad.webp") center/cover fixed; }
+body[data-chapter="gross-roleplay"] .chapter-header { position:relative;overflow:hidden;border-color:#693640;box-shadow:inset 0 0 70px rgba(104,26,48,.14); }
+body[data-chapter="gross-roleplay"] .chapter-header::after { content:"⚠";position:absolute;right:6%;top:50%;color:rgba(151,64,79,.1);font:140px Georgia,serif;transform:translateY(-50%);animation:gross-mark 5s ease-in-out infinite; }
+body[data-chapter="gross-roleplay"] .reading-progress i { background:linear-gradient(90deg,#3b1624,#9f4553,#d29a68);box-shadow:0 0 14px #863444; }
+body[data-chapter="gross-roleplay"] .rule-section::before { background:linear-gradient(#aa5e68,#4c1e2a); }
+body[data-chapter="gross-roleplay"] .rule-section summary h2::before { content:"!";color:#dc8990;border-color:#7f3c49;background:#210b11; }
+.gross-consent-notice { position:relative;display:grid;grid-template-columns:70px 1fr;gap:18px;align-items:center;margin:0 0 28px;padding:20px 24px;overflow:hidden;color:#d8b9b6;background:linear-gradient(110deg,rgba(83,25,43,.5),rgba(18,10,12,.95));border:1px solid #733a48;box-shadow:0 10px 35px rgba(0,0,0,.25),0 0 25px rgba(119,40,63,.12); }
+.gross-consent-notice::after { content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(238,155,167,.07),transparent 70%);transform:translateX(-100%);animation:ck-shine 4.5s ease-in-out infinite; }
+.gross-consent-notice > span { display:grid;place-items:center;width:58px;height:58px;color:#e3a0a1;border:1px solid #985063;border-radius:50%;font:28px var(--display);box-shadow:inset 0 0 20px #571828,0 0 18px #70213555;animation:gross-seal 3s ease-in-out infinite; }
+.gross-consent-notice b { color:#e2aaa7;font:16px var(--display);text-transform:uppercase; }.gross-consent-notice p { margin:6px 0 0;line-height:1.7; }
+.gross-forbidden { margin:0 0 18px;padding:18px 20px;color:#dfb7ae;background:linear-gradient(90deg,#35100e,#170a0a);border:1px solid #8c382f;border-left:5px solid #c24d3d;animation:gross-danger 3s ease-in-out infinite; }
+.gross-forbidden b { color:#f09a86!important;font:15px var(--display);text-transform:uppercase; }.gross-forbidden p { margin:7px 0 0!important;padding:0!important;border:0!important; }
+.gross-ban-list li { background:linear-gradient(90deg,rgba(139,45,38,.18),transparent 75%)!important;border-bottom-color:rgba(181,70,57,.15)!important; }
+.gross-ban-list li::before { content:"×"!important;color:#d96151!important;font-size:17px;font-weight:700; }
+.consent-steps { display:grid;gap:11px;margin:20px 0;padding:0;counter-reset:none;list-style:none; }
+.consent-steps li { display:grid!important;grid-template-columns:40px 1fr;gap:13px;align-items:center;padding:13px!important;background:linear-gradient(90deg,rgba(59,101,66,.17),transparent 78%)!important;border:1px solid rgba(91,132,91,.24)!important; }
+.consent-steps li::before { display:none!important; }.consent-steps li > span { display:grid;place-items:center;width:34px;height:34px;color:#b9d0a2;background:#172318;border:1px solid #526c50;border-radius:50%;font-weight:600; }
+.gross-right { margin:22px 0;padding:19px;color:#c8d2b8;background:linear-gradient(90deg,rgba(41,72,43,.34),rgba(10,15,10,.7));border:1px solid #4e704c;border-left:4px solid #77946a; }
+.gross-right b { color:#b5ce9e!important;font:14px var(--display);text-transform:uppercase; }.gross-right p { margin:7px 0 0!important;padding:0!important;border:0!important; }
+@keyframes gross-mark { 0%,100%{opacity:.55;transform:translateY(-50%) rotate(-2deg)} 50%{opacity:1;transform:translateY(-50%) rotate(2deg)} }
+@keyframes gross-seal { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06);box-shadow:inset 0 0 24px #641a31,0 0 24px #8b354b55} }
+@keyframes gross-danger { 0%,100%{box-shadow:0 0 0 rgba(172,57,45,0)} 50%{box-shadow:0 0 24px rgba(172,57,45,.13)} }
+@media(max-width:700px){.gross-consent-notice{grid-template-columns:48px 1fr;padding:16px}.gross-consent-notice>span{width:44px;height:44px;font-size:22px}body[data-chapter="gross-roleplay"] .chapter-header::after{font-size:85px}}
