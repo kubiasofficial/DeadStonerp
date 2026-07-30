@@ -234,5 +234,79 @@ window.RULE_CHAPTERS = [
         body: `<h3>Definice</h3><p>V situacích, které nejsou výslovně popsány pravidly, se od každého hráče očekává používání zdravého rozumu.</p><p>Nezneužívej mezery v pravidlech. Pokud si nejsi jistý správným postupem, jednej tak, aby výsledek vedl ke kvalitnímu a férovému roleplayi.</p>`
       }
     ]
+  },
+  {
+    slug: "character-kill",
+    title: "Character Kill (CK)",
+    summary: "Trvalé a nevratné ukončení života postavy a pravidla všech druhů CK.",
+    sections: [
+      {
+        name: "Co znamená Character Kill",
+        body: `
+          <p><strong>Character Kill (CK)</strong> představuje trvalé ukončení života postavy. Po vykonání CK již není možné tuto postavu dále používat a hráč je povinen vytvořit si novou postavu.</p>
+          <p>Na serveru Deadstone Roleplay rozlišujeme tři druhy Character Kill:</p>
+          <div class="ck-types">
+            <article><span>CK</span><b>Usmrcení cizí postavy</b></article>
+            <article><span>SelfCK</span><b>Dobrovolné ukončení vlastní postavy</b></article>
+            <article><span>Situační CK</span><b>Trvalé ukončení postavy v důsledku mimořádné RP situace</b></article>
+          </div>`
+      },
+      {
+        name: "5.1 Společná pravidla pro všechny druhy CK",
+        body: `
+          <p>Tato pravidla platí pro všechny typy Character Kill <strong>bez výjimky</strong>.</p>
+          <ul>
+            <li>Je zakázáno převádět peníze, koně, povozy, nemovitosti nebo jakýkoliv jiný majetek na jinou postavu před vykonáním CK. Toto pravidlo platí i pro darování majetku přátelům nebo členům frakce.</li>
+            <li>Nově vytvořená postava nesmí mít žádnou přímou ani nepřímou spojitost s předchozí postavou. Nesmí se jednat o příbuzného, obchodního partnera ani osobu pokračující v jejím příběhu.</li>
+            <li>Nová postava nesmí po dobu <strong>14 dnů</strong> vstoupit do stejné legální ani nelegální frakce nebo vykonávat stejné zaměstnání jako předchozí postava.</li>
+            <li>Je zakázáno přenášet informace, kontakty, znalosti nebo jiné výhody získané předchozí postavou na novou postavu. Toto pravidlo se vztahuje také na neveřejné informace, interní fungování frakcí a speciální craft recepty.</li>
+          </ul>
+          <div class="ck-command-box"><b>Potvrzení platnosti CK v L-OOC</b><code>CK – Jméno Příjmení</code><code>SelfCK – Jméno Příjmení</code><code>SituačníCK – Jméno Příjmení</code></div>
+          <p>Jakékoli obcházení těchto pravidel bude považováno za <strong>závažné porušení pravidel serveru</strong>.</p>`
+      },
+      {
+        name: "5.2 Usmrcení cizí postavy (CK)",
+        body: `
+          <p>CK jiné postavy představuje nejzávažnější zásah do příběhu jiného hráče a vždy podléhá schválení administrace.</p>
+          <h3>Podmínky</h3>
+          <ul><li>CK musí být předem schváleno administrativou prostřednictvím ticketu.</li><li>Žádost musí obsahovat podrobný popis situace a důvod CK.</li><li>Součástí žádosti musí být důkazní materiál, například videozáznam z Medal, OBS nebo jiný průkazný záznam.</li><li>Administrace si vyhrazuje právo žádost zamítnout, pokud nebude doložen dostatečný RP důvod nebo kvalitní důkazy.</li></ul>
+          <h3>Platnost</h3>
+          <div class="ck-time-card"><strong>30 dní</strong><p>Schválené CK lze vykonat kdykoliv během 30 dnů od schválení administrací. Po uplynutí této lhůty schválení automaticky zaniká a je nutné podat novou žádost.</p></div>
+          <h3>Průběh</h3>
+          <ul><li>Oběť musí být během RP seznámena s důvodem svého usmrcení.</li><li>Po vykonání CK musí být zanechána RP stopa umožňující nalezení těla.</li><li>Oběť má právo podat odvolání prostřednictvím ticketu do <strong>24 hodin</strong> od ukončení RP situace.</li></ul>
+          <h3>Frakční CK</h3>
+          <p>Nelegální frakce nebo indiánské kmeny mohou vykonat CK člena za porušení interního kodexu pouze za těchto podmínek:</p>
+          <ul><li>Kodex je veřejně dostupný na frakčním Discordu.</li><li>Každý člen s ním byl prokazatelně seznámen.</li><li>Leader frakce informuje administraci s dostatečným předstihem prostřednictvím frakčního ticketu.</li></ul>`
+      },
+      {
+        name: "5.3 Dobrovolné ukončení postavy (SelfCK)",
+        body: `
+          <p><strong>SelfCK</strong> slouží hráčům, kteří chtějí dobrovolně ukončit příběh své postavy.</p>
+          <h3>Podmínky</h3>
+          <ul><li>Postava musí být vytvořena minimálně <strong>30 dní</strong> před podáním žádosti.</li><li>Musí existovat silný a logický příběhový důvod.</li><li>SelfCK nesmí sloužit k vyhnutí se RP následkům, trestnímu stíhání, dluhům nebo jiným probíhajícím RP situacím.</li></ul>
+          <h3>Travel SelfCK</h3>
+          <p>Travel SelfCK představuje nenásilné ukončení příběhu postavy, například trvalým odjezdem ze státu.</p>
+          <p>Po vykonání Travel SelfCK není možné postavu znovu použít.</p>
+          <p>Travel SelfCK není povolen nelegálním postavám, které by se tím snažily vyhnout dopadení nebo jiným RP následkům.</p>
+          <h3>Po dokončení</h3>
+          <p>Po odehrání SelfCK je hráč povinen vytvořit ticket obsahující:</p>
+          <ul><li>stručný popis situace,</li><li>způsob nalezení těla, pokud se jedná o smrt,</li><li>důkazní materiál – video nebo screenshoty.</li></ul>`
+      },
+      {
+        name: "5.4 Situační CK (SituačníCK)",
+        body: `
+          <p><strong>Situační CK</strong> slouží k trvalému ukončení příběhu postavy v důsledku nečekané a mimořádné RP situace.</p>
+          <h3>Příklady</h3>
+          <ul><li>pád z vysoké skály,</li><li>těžká dopravní nehoda,</li><li>výbuch,</li><li>jiné fatální události.</li></ul>
+          <p>Hráč se může sám rozhodnout, že jeho postava danou situaci nepřežije. V takovém případě platí stejná pravidla jako pro SelfCK.</p>
+          <h3>Výjimečné případy</h3>
+          <p>Ve výjimečných situacích lze Situační CK udělit jiné postavě pouze při existenci mimořádně silného RP důvodu.</p>
+          <p>Za takové situace lze považovat například:</p>
+          <ul><li>veřejnou popravu po dlouhodobém příběhu,</li><li>pomstu za vraždu člena rodiny,</li><li>jiné mimořádné příběhové vyvrcholení.</li></ul>
+          <aside class="ck-warning"><b>Pozor</b><p>Běžné konflikty nebo jednorázové přestřelky nejsou důvodem pro Situační CK. Situační CK nesmí být plánováno předem.</p></aside>
+          <h3>Po vykonání</h3>
+          <ul><li>oznámit CK v L-OOC chatu,</li><li>nahlásit situaci administraci pomocí reportu,</li><li>založit ticket obsahující popis situace a důkazní materiály.</li></ul>`
+      }
+    ]
   }
 ];

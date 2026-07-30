@@ -26,10 +26,14 @@ function ruleSection(section, index, prefix = "") {
 
 function renderChapter() {
   const chapter = chapters[currentIndex], prev = chapters[currentIndex - 1], next = chapters[currentIndex + 1];
+  const criticalNotice = chapter.slug === "character-kill"
+    ? `<aside class="ck-critical-notice"><span>☠</span><div><b>Nejdůležitější pravidlo</b><p>Character Kill je nevratný zásah do příběhu postavy. Před jakýmkoliv CK si přečti celou kapitolu a při nejasnosti kontaktuj administraci.</p></div></aside>`
+    : "";
   document.title = `${chapter.title} | Pravidla Deadstone`;
   document.querySelector("#rules-content").innerHTML = `
     <div class="breadcrumb"><a href="../index.html">Deadstone</a><span>›</span><a href="index.html">Pravidla</a><span>›</span><strong>${chapter.title}</strong></div>
     <header class="chapter-header"><span>Kapitola ${String(currentIndex + 1).padStart(2, "0")}</span><h1>${chapter.title}</h1><p>${chapter.summary}</p></header>
+    ${criticalNotice}
     <nav class="chapter-toc"><h2>Obsah kapitoly</h2>${chapter.sections.map((section, index) => `<a href="#pravidlo-${index + 1}"><span>${String(index + 1).padStart(2, "0")}</span>${escapeHtml(section.name)}</a>`).join("")}</nav>
     <div class="rules-toolbar"><button id="expand-all">Rozbalit vše</button><button id="collapse-all">Sbalit vše</button></div>
     <div class="rule-list">${chapter.sections.map(ruleSection).join("")}</div>

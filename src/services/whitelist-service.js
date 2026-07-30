@@ -29,7 +29,14 @@ export const ruleQuestions = [
   { id: "stream-sniping", title: "Stream Sniping", question: "Co je stream sniping a proč poskytuje nefér herní výhodu?" },
   { id: "ghosting", title: "Ghosting", question: "Co znamená ghosting a kdy postava nesmí předávat získané informace?" },
   { id: "baiting", title: "Baiting", question: "Co je baiting a proč nelze bezdůvodně provokovat ostatní pouze kvůli vyvolání konfliktu?" },
-  { id: "common-sense", title: "Common Sense", question: "Jak máš postupovat v situaci, kterou pravidla výslovně nepopisují?" }
+  { id: "common-sense", title: "Common Sense", question: "Jak máš postupovat v situaci, kterou pravidla výslovně nepopisují?" },
+  { id: "ck-vyznam", title: "Character Kill", question: "Co znamená Character Kill a co se stane s postavou po jeho vykonání?" },
+  { id: "ck-majetek", title: "CK a majetek", question: "Co je před CK zakázáno udělat s majetkem postavy a proč zákaz platí i pro darování přátelům?" },
+  { id: "ck-nova-postava", title: "Nová postava po CK", question: "Jaká omezení platí pro novou postavu během prvních 14 dnů po CK?" },
+  { id: "ck-cizi-postavy", title: "CK cizí postavy", question: "Jaké podmínky musí být splněny před vykonáním CK cizí postavy a jak dlouho schválení platí?" },
+  { id: "ck-odvolani", title: "Odvolání proti CK", question: "Do kdy může oběť podat odvolání proti CK a co musí po vykonání CK zůstat na místě?" },
+  { id: "selfck", title: "SelfCK", question: "Jaké podmínky platí pro SelfCK a k jakým účelům nesmí být nikdy použito?" },
+  { id: "situacni-ck", title: "Situační CK", question: "Co je Situační CK a proč běžný konflikt nebo jednorázová přestřelka nestačí jako důvod?" }
 ];
 
 const WHITELIST_QUESTION_COUNT = 5;
