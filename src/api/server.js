@@ -12,13 +12,18 @@ import {
   uploadContentImage,
   updateSiteSettings
 } from "../services/content-service.js";
-import { requireAdmin, requireDiscordAdmin, requireSession } from "./middleware.js";
+import { requireAdmin, requireDiscordAdmin, requireFullAccess, requireSession } from "./middleware.js";
 import { registerDiscordAuth } from "./discord-auth.js";
 import {
   adjustAttempts, claimApplication, claimInterview, decideApplication, decideInterview,
   getPlayerWhitelist, listAdminApplications, listAdminInterviews, listGrantedAccess,
   requestInterview, revokeAccess, submitApplication
 } from "../services/whitelist-service.js";
+import {
+  acknowledgeCharacterEdit, adminUpdateCharacter, createCharacter, decideCharacter,
+  deleteCharacter, listAdminCharacters, listApprovedCharacters, listMyCharacters,
+  updateMyCharacter
+} from "../services/character-service.js";
 
 export function createApiServer() {
   const app = express();
@@ -51,6 +56,26 @@ export function createApiServer() {
     try {
       res.json({ data: await listPublished("towns", req.query.limit) });
     } catch (error) { next(error); }
+  });
+
+  app.get("/api/characters", requireFullAccess, async (_req, res, next) => {
+    try { res.json({ data: await listApprovedCharacters() }); }
+    catch (error) { next(error); }
+  });
+
+  app.get("/api/characters/mine", requireFullAccess, async (req, res, next) => {
+    try { res.json({ data: await listMyCharacters(req.user.id) }); }
+    catch (error) { next(error); }
+  });
+
+  app.post("/api/characters", requireFullAccess, async (req, res, next) => {
+    try { res.status(201).json({ data: await createCharacter(req.user, req.body) }); }
+    catch (error) { next(error); }
+  });
+
+  app.patch("/api/characters/:id", requireFullAccess, async (req, res, next) => {
+    try { res.json({ data: await updateMyCharacter(req.user, req.params.id, req.body) }); }
+    catch (error) { next(error); }
   });
 
   app.get("/api/whitelist/me", requireSession, async (req, res, next) => {
@@ -106,6 +131,31 @@ export function createApiServer() {
 
   app.get("/api/admin/content/:collection", requireDiscordAdmin, async (req, res, next) => {
     try { res.json({ data: await listAdminContent(req.params.collection) }); }
+    catch (error) { next(error); }
+  });
+
+  app.get("/api/admin/characters", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await listAdminCharacters(String(req.query.status || "pending")) }); }
+    catch (error) { next(error); }
+  });
+
+  app.patch("/api/admin/characters/:id/decision", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await decideCharacter(req.params.id, req.user, req.body.decision, req.body.reason) }); }
+    catch (error) { next(error); }
+  });
+
+  app.post("/api/admin/characters/:id/acknowledge", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await acknowledgeCharacterEdit(req.params.id, req.user) }); }
+    catch (error) { next(error); }
+  });
+
+  app.patch("/api/admin/characters/:id", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await adminUpdateCharacter(req.params.id, req.body, req.user) }); }
+    catch (error) { next(error); }
+  });
+
+  app.delete("/api/admin/characters/:id", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await deleteCharacter(req.params.id, req.user) }); }
     catch (error) { next(error); }
   });
 

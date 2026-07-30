@@ -94,6 +94,7 @@ async function loadDiscordSession() {
     const profile = document.querySelector(".discord-profile");
     const whitelist = document.querySelector(".whitelist-link");
     const adminLink = document.querySelector(".admin-link");
+    const characterLink = document.querySelector(".character-link");
     if (!profile || !user) return;
     document.querySelectorAll(".discord-login").forEach(link => {
       link.setAttribute("hidden", "");
@@ -106,6 +107,7 @@ async function loadDiscordSession() {
     profile.querySelector("small").textContent = user.admin ? "Admin" : "";
     if (whitelist) whitelist.hidden = false;
     if (adminLink) adminLink.hidden = !user.admin;
+    if (characterLink) characterLink.hidden = !user.fullAccess;
     document.documentElement.dataset.authenticated = "true";
     if (user.admin) document.documentElement.dataset.admin = "true";
   } catch (error) {

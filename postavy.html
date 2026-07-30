@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Deadstone Občané | Roleplay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Roboto+Slab:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="whitelist.css">
+</head>
+<body>
+  <nav class="portal-nav"><a href="index.html"><img src="obrazky/logo-transparent.png" alt="Deadstone"></a><div><a class="button button-small" href="index.html">Zpět na web</a></div></nav>
+  <header class="portal-header citizen-header"><p class="eyebrow">Registr obyvatel · 1899</p><h1>Deadstone Občané</h1><p>Jména a příběhy lidí, kteří tvoří náš stát.</p></header>
+  <main class="portal-main shell">
+    <div id="character-message" class="message" hidden></div>
+    <div class="citizen-toolbar"><div><h2>Seznam občanů</h2><p>Pouze schválené postavy.</p></div><button class="button" id="open-character-form">Přidat / upravit</button></div>
+    <div class="citizen-layout">
+      <aside class="portal-card citizen-list" id="citizen-list"><p>Načítám občany…</p></aside>
+      <section class="portal-card citizen-detail" id="citizen-detail"><h2>Vyber postavu</h2><p>Vlevo zvol občana a zobrazí se jeho životní příběh.</p></section>
+    </div>
+  </main>
+  <dialog class="western-modal" id="character-dialog">
+    <form method="dialog" class="dialog-close"><button aria-label="Zavřít">×</button></form>
+    <form class="portal-form" id="character-form">
+      <h2>Přidat nebo upravit postavu</h2>
+      <div class="field"><label for="character-choice">Moje postavy</label><select id="character-choice"><option value="">＋ Nová postava</option></select></div>
+      <div class="field"><label for="character-name">Jméno a příjmení</label><input id="character-name" required maxlength="80"></div>
+      <div class="field"><label for="character-year">Rok narození</label><input id="character-year" type="number" min="1800" max="1899" required></div>
+      <div class="field"><label for="character-origin">Původ</label><input id="character-origin" required maxlength="100"></div>
+      <div class="field"><label for="character-lore">Lore</label><textarea id="character-lore" minlength="50" maxlength="10000" required></textarea></div>
+      <button class="button" type="submit">Odeslat</button>
+    </form>
+  </dialog>
+  <script src="web-config.js"></script><script src="postavy.js"></script>
+</body>
+</html>

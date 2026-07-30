@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import { env } from "../config/env.js";
 import { saveDiscordUser } from "../services/content-service.js";
+import { db } from "../config/firebase.js";
 
 const DISCORD_API = "https://discord.com/api/v10";
 const SESSION_AGE = 60 * 60 * 24 * 7;
@@ -144,6 +145,8 @@ export function registerDiscordAuth(app) {
       const member = memberResponse.ok ? await memberResponse.json() : { roles: [] };
       const roles = member.roles || [];
       const admin = env.discordAdminRoleIds.some(roleId => roles.includes(roleId));
+      const accessSnapshot = await db.collection("whitelistProfiles").doc(session.id).get();
+      const fullAccess = Boolean(accessSnapshot.data()?.completed);
       res.json({
         authenticated: true,
         user: {
@@ -151,6 +154,7 @@ export function registerDiscordAuth(app) {
           username: session.username,
           avatar: session.avatar,
           admin,
+          fullAccess,
           roles
         }
       });

@@ -1,5 +1,6 @@
 import { env } from "../config/env.js";
 import { readSession } from "./discord-auth.js";
+import { db } from "../config/firebase.js";
 
 const DISCORD_API = "https://discord.com/api/v10";
 
@@ -24,6 +25,21 @@ export async function requireDiscordAdmin(req, res, next) {
     }
     req.user = session;
     req.discordMember = member;
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function requireFullAccess(req, res, next) {
+  try {
+    const session = readSession(req);
+    if (!session) return res.status(401).json({ error: "Nejdříve se přihlaste přes Discord." });
+    const snapshot = await db.collection("whitelistProfiles").doc(session.id).get();
+    if (!snapshot.exists || !snapshot.data().completed) {
+      return res.status(403).json({ error: "Postavy jsou dostupné až po úspěšném pohovoru." });
+    }
+    req.user = session;
     next();
   } catch (error) {
     next(error);

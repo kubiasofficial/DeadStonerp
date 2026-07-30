@@ -32,13 +32,16 @@ const applicationTabs = [
 const interviewTabs = [
   ["waiting", "Čekající"], ["claimed", "Převzaté"], ["approved", "Schválené"], ["rejected", "Zamítnuté"]
 ];
+const characterTabs = [
+  ["pending", "Čekající"], ["approved", "Schválené"], ["rejected", "Zamítnuté"], ["edited", "Upravené"]
+];
 
 function renderTabs() {
   if (section === "access") {
     tabs.innerHTML = `<span class="status-badge approved">Aktivní vstupní listy</span>`;
     return;
   }
-  const values = section === "applications" ? applicationTabs : interviewTabs;
+  const values = section === "applications" ? applicationTabs : section === "characters" ? characterTabs : interviewTabs;
   tabs.innerHTML = values.map(([value, label]) =>
     `<button class="tab ${status === value ? "active" : ""}" data-status="${value}">${label}</button>`).join("");
   tabs.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
@@ -93,6 +96,64 @@ function accessCard(item) {
     <p>Hráč má platný vstupní list a plný přístup do státu.</p>
     <div class="actions"><button class="button reject" data-revoke="${item.discordId}" data-name="${escapeHtml(item.discordName)}">Odebrat přístup</button></div>
   </article>`;
+}
+
+function characterCard(item) {
+  return `<article class="request-card">
+    <div class="request-head"><div><h2>${escapeHtml(item.name)}</h2><p>Hráč ${escapeHtml(item.ownerDiscordName)} · <@${escapeHtml(item.ownerDiscordId)}></p></div></div>
+    ${item.editReviewPending ? `<div class="message">Hráč <strong>${escapeHtml(item.ownerDiscordName)}</strong> si upravil postavu <strong>${escapeHtml(item.name)}</strong>.</div>` : ""}
+    <dl><dt>Rok narození</dt><dd>${item.birthYear}</dd><dt>Původ</dt><dd>${escapeHtml(item.origin)}</dd><dt>Lore</dt><dd>${escapeHtml(item.lore)}</dd></dl>
+    ${item.rejectionReason ? `<div class="reason">${escapeHtml(item.rejectionReason)}</div>` : ""}
+    <div class="actions">
+      ${item.status === "pending" ? `<button class="button approve" data-character-decision="${item.id}" data-decision="approved">Schválit</button><button class="button reject" data-character-decision="${item.id}" data-decision="rejected">Zamítnout</button>` : ""}
+      ${item.editReviewPending ? `<button class="button approve" data-character-ack="${item.id}">Zkontrolováno</button>` : ""}
+      <button class="button button-ghost" data-character-edit="${item.id}">Upravit</button>
+      <button class="button reject" data-character-delete="${item.id}">Smazat</button>
+    </div>
+  </article>`;
+}
+
+function bindCharacterActions(items) {
+  const byId = Object.fromEntries(items.map(item => [item.id, item]));
+  list.querySelectorAll("[data-character-decision]").forEach(button => button.addEventListener("click", async () => {
+    const rejected = button.dataset.decision === "rejected";
+    const reason = rejected ? prompt("Uveď důvod zamítnutí postavy:") : "";
+    if (rejected && !reason) return;
+    button.disabled = true;
+    try {
+      await api(`/api/admin/characters/${button.dataset.characterDecision}/decision`, {
+        method: "PATCH", body: JSON.stringify({ decision: button.dataset.decision, reason })
+      });
+      notify(rejected ? "Postava byla zamítnuta a hráč dostal důvod do soukromé zprávy." : "Postava byla schválena.");
+      load();
+    } catch (error) { notify(error.message, true); }
+  }));
+  list.querySelectorAll("[data-character-ack]").forEach(button => button.addEventListener("click", async () => {
+    try {
+      await api(`/api/admin/characters/${button.dataset.characterAck}/acknowledge`, { method: "POST", body: "{}" });
+      notify("Úprava byla označena jako zkontrolovaná."); load();
+    } catch (error) { notify(error.message, true); }
+  }));
+  list.querySelectorAll("[data-character-edit]").forEach(button => button.addEventListener("click", async () => {
+    const item = byId[button.dataset.characterEdit];
+    const name = prompt("Jméno a příjmení:", item.name); if (!name) return;
+    const birthYear = Number(prompt("Rok narození:", item.birthYear)); if (!birthYear) return;
+    const origin = prompt("Původ:", item.origin); if (!origin) return;
+    const lore = prompt("Lore:", item.lore); if (!lore) return;
+    try {
+      await api(`/api/admin/characters/${item.id}`, {
+        method: "PATCH", body: JSON.stringify({ name, birthYear, origin, lore })
+      });
+      notify("Postava byla administrátorem upravena."); load();
+    } catch (error) { notify(error.message, true); }
+  }));
+  list.querySelectorAll("[data-character-delete]").forEach(button => button.addEventListener("click", async () => {
+    if (!confirm("Opravdu tuto postavu trvale smazat?")) return;
+    try {
+      await api(`/api/admin/characters/${button.dataset.characterDelete}`, { method: "DELETE" });
+      notify("Postava byla smazána."); load();
+    } catch (error) { notify(error.message, true); }
+  }));
 }
 
 function contentLabel() {
@@ -292,6 +353,12 @@ async function load() {
       renderContentManager(data);
       return;
     }
+    if (section === "characters") {
+      const data = await api(`/api/admin/characters?status=${status}`);
+      list.innerHTML = data.length ? data.map(characterCard).join("") : "<p>V této části nejsou žádné postavy.</p>";
+      bindCharacterActions(data);
+      return;
+    }
     const path = section === "applications"
       ? `/api/admin/whitelist/applications?status=${status}`
       : section === "interviews"
@@ -311,7 +378,7 @@ document.querySelectorAll("[data-section]").forEach(button => button.addEventLis
   document.querySelectorAll("[data-section]").forEach(item => item.classList.remove("active"));
   button.classList.add("active");
   section = button.dataset.section;
-  status = section === "applications" ? "pending" : section === "interviews" ? "waiting" : "active";
+  status = section === "applications" ? "pending" : section === "interviews" ? "waiting" : section === "characters" ? "pending" : "active";
   load();
 }));
 
