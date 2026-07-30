@@ -43,12 +43,18 @@ async function openCategory(key){
 grid.querySelectorAll("[data-category]").forEach(button=>button.onclick=()=>openCategory(button.dataset.category));
 document.querySelector("#ticket-form").addEventListener("submit",async event=>{
   event.preventDefault();const button=event.currentTarget.querySelector("button[type=submit]");button.disabled=true;
+  const formMessage=document.querySelector("#ticket-form-message");formMessage.hidden=true;
   try{
+    const description=document.querySelector("#ticket-description").value.trim();
+    if(description.length<20)throw new Error(`Podrobný popis musí mít alespoň 20 znaků. Nyní má ${description.length}.`);
     const fields={};document.querySelectorAll("[data-field]").forEach(element=>fields[element.dataset.field]=element.multiple?[...element.selectedOptions].map(o=>o.value):element.value.trim());
-    fields.attachmentLinks=document.querySelector("#ticket-links").value.split(/\r?\n/).map(value=>value.trim()).filter(Boolean).slice(0,10);
-    const result=await api("/api/tickets",{method:"POST",body:JSON.stringify({category:document.querySelector("#ticket-category").value,description:document.querySelector("#ticket-description").value.trim(),fields,attachments:[]})});
+    const links=document.querySelector("#ticket-links").value.split(/\r?\n/).map(value=>value.trim()).filter(Boolean).slice(0,10);
+    const invalidLink=links.find(value=>!/^https?:\/\/\S+$/i.test(value));
+    if(invalidLink)throw new Error(`Neplatný odkaz: ${invalidLink}. Odkaz musí začínat http:// nebo https://`);
+    fields.attachmentLinks=links;
+    const result=await api("/api/tickets",{method:"POST",body:JSON.stringify({category:document.querySelector("#ticket-category").value,description,fields,attachments:[]})});
     dialog.close();notify(`Ticket ${result.number} byl úspěšně založen. O změnách tě upozorníme na Discordu.`);event.currentTarget.reset();
-  }catch(error){notify(error.message,true)}finally{button.disabled=false}
+  }catch(error){formMessage.textContent=error.message;formMessage.hidden=false;formMessage.scrollIntoView({behavior:"smooth",block:"nearest"})}finally{button.disabled=false}
 });
 api("/api/auth/me").then(()=>api("/api/support/faction-members")).then(data=>factionMembers=data).catch(()=>location.href=`${apiBase}/api/auth/discord`);
 api("/api/support/faction-invitations").then(items=>{
