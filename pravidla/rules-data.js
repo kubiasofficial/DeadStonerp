@@ -175,5 +175,64 @@ window.RULE_CHAPTERS = [
           </tbody></table></div>`
       }
     ]
+  },
+  {
+    slug: "zakladni-rp-pojmy",
+    title: "Základní RP pojmy",
+    summary: "Nejčastěji používané pojmy, které musí znát každý hráč Deadstone Roleplay.",
+    sections: [
+      {
+        name: "Úvod do RP pojmů",
+        body: `<p>Tato kapitola vysvětluje nejčastěji používané pojmy na serveru Deadstone Roleplay. Každý hráč je povinen znát jejich význam a řídit se jimi.</p>`
+      },
+      {
+        name: "IC (In Character)",
+        body: `<h3>Definice</h3><p><strong>IC</strong> představuje vše, co se odehrává přímo ve hře z pohledu tvé postavy.</p><p>Veškeré informace, které tvoje postava získá během hry, může využívat při dalším roleplayi.</p><section class="example good"><b>Příklad</b><p>Tvá postava slyší od šerifa, že hledá hledaného zločince.</p><p>Tuto informaci můžeš ve hře využít, protože ji tvoje postava skutečně získala.</p></section>`
+      },
+      {
+        name: "OOC (Out Of Character)",
+        body: `<h3>Definice</h3><p><strong>OOC</strong> označuje komunikaci mimo roli postavy.</p><p>Patří sem například komunikace na Discordu, technické problémy nebo dotazy na administraci.</p><p>OOC informace nesmí být využívány během roleplaye.</p><section class="example bad"><b>Příklad</b><p>Na Discordu se dozvíš, kde se právě schází určitá skupina hráčů.</p><p>Tvoje postava tuto informaci nezná a nesmí podle ní jednat.</p></section>`
+      },
+      {
+        name: "Metagaming (MG)",
+        body: `<h3>Definice</h3><p><strong>Metagaming</strong> je využívání informací získaných mimo hru během roleplaye.</p><p>Jedná se o jedno z nejzávažnějších porušení pravidel.</p><div class="command-examples"><section class="example good"><b>Správný příklad</b><p>Na Twitchi vidíš, kde se nachází jiný hráč. Ve hře tuto informaci ignoruješ.</p></section><section class="example bad"><b>Nesprávný příklad</b><p>Po zhlédnutí streamu přijedeš na dané místo a začneš s hráčem komunikovat.</p></section></div>`
+      },
+      {
+        name: "Powergaming (PG)",
+        body: `<h3>Definice</h3><p><strong>Powergaming</strong> je provádění nereálných akcí nebo vnucování výsledků ostatním hráčům bez možnosti reakce.</p><p>Roleplay je vždy společná interakce mezi hráči.</p><section class="example bad"><b>Nesprávný příklad</b><p><code>/me Nadzvedne povoz, zamíří a hodí ho na doktora.</code></p><p>Hráč předem určil výsledek celé situace.</p></section>`
+      },
+      {
+        name: "FailRP",
+        body: `<h3>Definice</h3><p><strong>FailRP</strong> je jakékoliv jednání, které narušuje realistický průběh roleplaye nebo odporuje logickému chování postavy.</p><h3>Příklady</h3><ul><li>Ignorování vážných zranění.</li><li>Běhání po přestřelce bez jakékoliv reakce.</li><li>Smích během vážné situace bez RP důvodu.</li><li>Nepřiměřené nebo nereálné chování vzhledem k době roku 1899.</li></ul>`
+      },
+      {
+        name: "FearRP",
+        body: `<h3>Definice</h3><p><strong>FearRP</strong> znamená, že tvoje postava má přirozený strach o svůj život.</p><p>Pokud se nacházíš v situaci, kdy ti hrozí vážné zranění nebo smrt, musí tomu odpovídat i tvoje chování.</p><div class="command-examples"><section class="example good"><b>Správný příklad</b><p>Bandita na tebe míří revolverem z bezprostřední blízkosti.</p><p>Postava spolupracuje nebo se snaží situaci řešit realistickým způsobem.</p></section><section class="example bad"><b>Nesprávný příklad</b><p>Navzdory namířené zbrani začneš útočit pěstmi nebo utíkat bez jakéhokoliv důvodu.</p></section></div>`
+      },
+      {
+        name: "Bunny Hopping",
+        body: `<h3>Definice</h3><p>Opakované skákání za účelem rychlejšího pohybu nebo získání výhody je zakázáno.</p>`
+      },
+      {
+        name: "Combat Logging",
+        body: `<h3>Definice</h3><p>Odpojení ze serveru během aktivní RP situace bez oprávněného důvodu je zakázáno.</p><p>Pokud dojde k technickému problému, je hráč povinen se co nejdříve vrátit do hry a pokračovat v roleplayi.</p>`
+      },
+      {
+        name: "Stream Sniping",
+        body: `<h3>Definice</h3><p>Sledování živého vysílání jiného hráče za účelem získání herní výhody je zakázáno.</p>`
+      },
+      {
+        name: "Ghosting",
+        body: `<h3>Definice</h3><p><strong>Ghosting</strong> je předávání informací hráči po jeho smrti nebo v situaci, kdy by je jeho postava nemohla sdělit.</p>`
+      },
+      {
+        name: "Baiting",
+        body: `<h3>Definice</h3><p><strong>Baiting</strong> je úmyslné provokování ostatních hráčů pouze za účelem vyvolání konfliktu nebo získání RP výhody bez logického důvodu.</p>`
+      },
+      {
+        name: "Common Sense",
+        body: `<h3>Definice</h3><p>V situacích, které nejsou výslovně popsány pravidly, se od každého hráče očekává používání zdravého rozumu.</p><p>Nezneužívej mezery v pravidlech. Pokud si nejsi jistý správným postupem, jednej tak, aby výsledek vedl ke kvalitnímu a férovému roleplayi.</p>`
+      }
+    ]
   }
 ];

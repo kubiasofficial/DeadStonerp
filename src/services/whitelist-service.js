@@ -19,7 +19,17 @@ export const ruleQuestions = [
   { id: "prikaz-doc", title: "Příkaz /doc", question: "Kdy se používá příkaz /doc a jak bys pomocí něj rozehrál delší činnost?" },
   { id: "prikaz-stopa", title: "Příkaz /stopa", question: "Jak má vypadat správná RP stopa a jaké informace naopak nesmí prozradit?" },
   { id: "prikaz-try", title: "Příkaz /try", question: "Kdy je vhodné použít /try a proč jím nelze rozhodnout výsledek přestřelky?" },
-  { id: "prikaz-roll", title: "Příkaz /roll", question: "Za jakých podmínek se používá /roll a proč jeho výsledek nenahrazuje roleplay?" }
+  { id: "prikaz-roll", title: "Příkaz /roll", question: "Za jakých podmínek se používá /roll a proč jeho výsledek nenahrazuje roleplay?" },
+  { id: "ic-ooc", title: "IC a OOC", question: "Vysvětli rozdíl mezi IC a OOC informací a uveď příklad, kdy OOC informaci nesmíš použít." },
+  { id: "metagaming", title: "Metagaming", question: "Co je metagaming a jak se zachováš, když na streamu zjistíš polohu jiného hráče?" },
+  { id: "powergaming", title: "Powergaming", question: "Co je powergaming a proč nesmíš jiné postavě předem určit výsledek své akce?" },
+  { id: "failrp", title: "FailRP", question: "Vysvětli pojem FailRP a uveď alespoň dva příklady nereálného jednání." },
+  { id: "fearrp", title: "FearRP", question: "Jak se má postava zachovat, když jí z bezprostřední blízkosti někdo míří revolverem?" },
+  { id: "combat-logging", title: "Combat Logging", question: "Co je combat logging a co musíš udělat, pokud se během RP situace odpojíš kvůli technickému problému?" },
+  { id: "stream-sniping", title: "Stream Sniping", question: "Co je stream sniping a proč poskytuje nefér herní výhodu?" },
+  { id: "ghosting", title: "Ghosting", question: "Co znamená ghosting a kdy postava nesmí předávat získané informace?" },
+  { id: "baiting", title: "Baiting", question: "Co je baiting a proč nelze bezdůvodně provokovat ostatní pouze kvůli vyvolání konfliktu?" },
+  { id: "common-sense", title: "Common Sense", question: "Jak máš postupovat v situaci, kterou pravidla výslovně nepopisují?" }
 ];
 
 const WHITELIST_QUESTION_COUNT = 5;
