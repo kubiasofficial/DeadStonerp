@@ -13,7 +13,13 @@ export const ruleQuestions = [
   { id: "vhodna-postava", title: "Vhodná postava", question: "Jaké vlastnosti má mít uvěřitelná postava zasazená do roku 1899?" },
   { id: "vyuzivani-chyb", title: "Využívání chyb", question: "Co uděláš, když objevíš chybu hry nebo serveru, která by ti mohla poskytnout výhodu?" },
   { id: "obchazeni-trestu", title: "Obcházení trestů", question: "Uveď příklad obcházení trestu a vysvětli, proč je takové jednání zakázané." },
-  { id: "neznalost-pravidel", title: "Neznalost pravidel", question: "Omlouvá neznalost pravidel jejich porušení a jak má hráč sledovat jejich změny?" }
+  { id: "neznalost-pravidel", title: "Neznalost pravidel", question: "Omlouvá neznalost pravidel jejich porušení a jak má hráč sledovat jejich změny?" },
+  { id: "prikaz-me", title: "Příkaz /me", question: "K čemu slouží příkaz /me a co pomocí něj nesmíš určit nebo ovládat?" },
+  { id: "prikaz-do", title: "Příkaz /do", question: "Vysvětli rozdíl mezi příkazy /me a /do a uveď správný příklad použití /do." },
+  { id: "prikaz-doc", title: "Příkaz /doc", question: "Kdy se používá příkaz /doc a jak bys pomocí něj rozehrál delší činnost?" },
+  { id: "prikaz-stopa", title: "Příkaz /stopa", question: "Jak má vypadat správná RP stopa a jaké informace naopak nesmí prozradit?" },
+  { id: "prikaz-try", title: "Příkaz /try", question: "Kdy je vhodné použít /try a proč jím nelze rozhodnout výsledek přestřelky?" },
+  { id: "prikaz-roll", title: "Příkaz /roll", question: "Za jakých podmínek se používá /roll a proč jeho výsledek nenahrazuje roleplay?" }
 ];
 
 const WHITELIST_QUESTION_COUNT = 5;

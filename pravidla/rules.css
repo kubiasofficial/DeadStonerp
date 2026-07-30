@@ -113,3 +113,39 @@ h1 { margin:8px 0 12px; color:#cfb184; font:400 clamp(42px,6vw,72px)/1.06 var(--
 .rule-body.prose li { margin:8px 0; }
 .player-pledge { border-color:#956426!important;box-shadow:0 0 30px rgba(170,105,31,.14); }
 .player-pledge .rule-body { color:#e2c99e;font-style:italic;background:linear-gradient(135deg,rgba(116,67,22,.18),rgba(15,12,8,.3)); }
+.rule-body.prose h3 { margin:22px 0 10px;color:#c8a36f;font:400 15px var(--display);text-transform:uppercase; }
+.rule-body.prose code { padding:2px 6px;color:#e2bf86;background:#0a0806;border:1px solid rgba(176,134,76,.2); }
+.command-examples { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0; }
+.command-examples .example,.rule-body.prose > .example { padding:18px;border:1px solid rgba(176,134,76,.2);background:rgba(8,7,5,.5); }
+.command-examples .good { border-left:3px solid #667c48; }.command-examples .bad { border-left:3px solid #8a3c30; }
+.rules-table-wrap { overflow-x:auto; }.rules-table { width:100%;border-collapse:collapse; }
+.rules-table th,.rules-table td { padding:13px;text-align:left;border:1px solid rgba(176,134,76,.22); }
+.rules-table th { color:#d3ad74;background:#17110c;font:11px var(--display);text-transform:uppercase; }
+.rules-table td { color:#bbaa90;background:rgba(9,8,6,.55); }
+@media(max-width:650px){.command-examples{grid-template-columns:1fr}}
+.reading-progress { position:fixed;z-index:100;inset:0 0 auto;height:3px;background:#080604; }
+.reading-progress i { display:block;width:0;height:100%;background:linear-gradient(90deg,#71331f,#d39a49,#e9c981);box-shadow:0 0 12px #d89236;transition:width .12s linear; }
+.rule-section { position:relative;overflow:hidden;opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease,border-color .3s ease,box-shadow .3s ease; }
+.rule-section.rule-visible { opacity:1;transform:none; }
+.rule-section::before { content:"";position:absolute;z-index:2;inset:0 auto 0 0;width:3px;background:linear-gradient(#b37a38,#5a351d);opacity:.75; }
+.rule-section:nth-child(3n+2)::before { background:linear-gradient(#687d54,#31472d); }
+.rule-section:nth-child(3n+3)::before { background:linear-gradient(#8e5842,#542a24); }
+.rule-section:hover { border-color:#76532e;box-shadow:0 12px 35px rgba(0,0,0,.22),inset 0 0 25px rgba(155,100,38,.035); }
+.rule-section summary h2::before { display:inline-grid;place-items:center;width:25px;height:25px;margin-right:10px;color:#b98a4f;border:1px solid rgba(185,138,79,.35);border-radius:50%;font:12px "Roboto Slab",serif;content:"◆";vertical-align:2px; }
+.rule-section[data-type="command"] summary h2::before { content:">";color:#d6a254;border-color:#9f6d31;background:#28180c; }
+.rule-section[data-type="overview"] summary h2::before { content:"≡"; }
+.player-pledge summary h2::before { content:"★"; }
+.rule-body.prose strong { color:#e0ba7c;font-weight:600;text-shadow:0 0 12px rgba(205,145,67,.13); }
+.rule-body.prose > p { position:relative;padding-left:14px;border-left:1px solid rgba(176,134,76,.17); }
+.rule-body.prose > p:first-child { color:#d0c0a7;font-size:1.04em; }
+.rule-body.prose ul { list-style:none;display:grid;gap:7px; }
+.rule-body.prose li { position:relative;padding:9px 12px 9px 34px;margin:0;background:linear-gradient(90deg,rgba(151,103,48,.1),transparent 72%);border-bottom:1px solid rgba(176,134,76,.09); }
+.rule-body.prose li::before { content:"✦";position:absolute;left:11px;color:#c58b43; }
+.rule-body.prose .good b { color:#a9c481; }.rule-body.prose .bad b { color:#d98776; }
+.rule-body.prose .good::before,.rule-body.prose .bad::before { float:right;font-size:21px;font-weight:700; }
+.rule-body.prose .good::before { content:"✓";color:#80995c; }.rule-body.prose .bad::before { content:"×";color:#a64e3e; }
+.rule-section[open] > summary { background:linear-gradient(90deg,rgba(132,78,31,.13),transparent 65%); }
+.rule-section[open] .rule-body { animation:paper-reveal .36s ease both; }
+@keyframes paper-reveal { from{opacity:0;transform:translateY(-7px)} to{opacity:1;transform:none} }
+@media(max-width:650px){.rule-section summary h2::before{display:none}.rule-body.prose{padding:20px 17px}.rule-body.prose > p{padding-left:10px}}
+@media(prefers-reduced-motion:reduce){.rule-section{opacity:1;transform:none}.rule-section[open] .rule-body{animation:none}.reading-progress i{transition:none}}

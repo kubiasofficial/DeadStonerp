@@ -88,5 +88,92 @@ window.RULE_CHAPTERS = [
         body: `<p>Neznalost pravidel neomlouvá jejich porušení.</p><p>Každý hráč je povinen se s pravidly seznámit ještě před vstupem do hry.</p><p>Pravidla jsou průběžně aktualizována a hráči jsou povinni sledovat jejich změny.</p>`
       }
     ]
+  },
+  {
+    slug: "rp-prikazy",
+    title: "RP příkazy",
+    summary: "Praktické použití příkazů, které doplňují roleplay tam, kde jej hra nedokáže zobrazit.",
+    sections: [
+      {
+        name: "Úvod do RP příkazů",
+        body: `
+          <p>Na serveru Deadstone Roleplay se používají RP příkazy, které slouží k doplnění roleplaye tam, kde to hra sama nedokáže zobrazit. Jejich správné používání je důležitou součástí kvalitního roleplaye.</p>`
+      },
+      {
+        name: "/me",
+        body: `
+          <h3>Definice</h3>
+          <p>Příkaz <code>/me</code> slouží k popisu činnosti, pohybu nebo jednání tvé postavy.</p>
+          <p>Používej jej pouze pro akce, které tvoje postava skutečně vykonává.</p>
+          <div class="command-examples"><section class="example good"><b>Správné použití</b><p><code>/me sundá klobouk a položí jej na stůl.</code></p><p><code>/me vytáhne z kapsy dopis a podává jej šerifovi.</code></p><p><code>/me pomalu nabíjí revolver.</code></p></section>
+          <section class="example bad"><b>Nesprávné použití</b><p><code>/me trefí šerifa do hlavy.</code></p><p><code>/me donutí doktora otevřít dveře.</code></p></section></div>
+          <p>Příkaz <code>/me</code> nesmí určovat výsledek akce ani ovládat jinou postavu.</p>`
+      },
+      {
+        name: "/do",
+        body: `
+          <h3>Definice</h3>
+          <p>Příkaz <code>/do</code> slouží k popisu stavu, okolí nebo výsledku situace. Nepopisuje činnost tvé postavy.</p>
+          <p>Často se používá společně s příkazem <code>/me</code>.</p>
+          <div class="command-examples"><section class="example good"><b>Správné použití</b><p><code>/do Na košili jsou viditelné stopy krve.</code></p><p><code>/do Dveře jsou zamčené.</code></p><p><code>/do Na stole leží otevřená kniha.</code></p></section>
+          <section class="example bad"><b>Nesprávné použití</b><p><code>/do Otevře dveře.</code></p><p><code>/do Vezme revolver.</code></p></section></div>
+          <p>Tyto nesprávné příklady popisují činnost postavy a patří do příkazu <code>/me</code>.</p>`
+      },
+      {
+        name: "/doc",
+        body: `
+          <h3>Definice</h3>
+          <p>Příkaz <code>/doc</code> slouží k označení průběhu delší činnosti nebo času.</p>
+          <p>Používá se například při lékařských zákrocích, opravách, výrobě nebo jiných delších RP akcích.</p>
+          <section class="example good"><b>Správné použití</b><p><code>/doc 1/3 Připravuje chirurgické nástroje.</code></p><p><code>/doc 2/3 Čistí ránu a zastavuje krvácení.</code></p><p><code>/doc 3/3 Ránu zašívá a přikládá obvaz.</code></p></section>`
+      },
+      {
+        name: "/stopa",
+        body: `
+          <h3>Definice</h3>
+          <p>Příkaz <code>/stopa</code> vytváří trvalou RP stopu, kterou mohou při vyšetřování objevit jiné postavy.</p>
+          <p>Stopy by měly být realistické a odpovídat situaci.</p>
+          <div class="command-examples"><section class="example good"><b>Správné použití</b><p><code>/stopa Na zemi zůstaly krvavé otisky bot.</code></p><p><code>/stopa Vedle dveří leží prázdná nábojnice.</code></p><p><code>/stopa Na stole je rozbitá láhev od whisky.</code></p></section>
+          <section class="example bad"><b>Nesprávné použití</b><p><code>/stopa Pachatel se jmenuje John.</code></p><p><code>/stopa Zabil mě člen gangu XYZ.</code></p></section></div>
+          <p>Stopa nesmí nahrazovat metagaming ani prozrazovat informace, které by postavy nemohly běžně zjistit.</p>`
+      },
+      {
+        name: "/try",
+        body: `
+          <h3>Definice</h3>
+          <p>Příkaz <code>/try</code> slouží k pokusu o činnost, jejíž výsledek není předem jistý. Systém náhodně rozhodne, zda byl pokus úspěšný nebo neúspěšný.</p>
+          <p>Používej jej pouze v situacích, kdy nelze jednoznačně určit výsledek.</p>
+          <div class="command-examples"><section class="example good"><b>Správné použití</b><p><code>/try Pokusí se vypáčit zámek kapesním nožem.</code></p><p>Výsledek: <strong>Úspěch</strong> nebo <strong>Neúspěch</strong>.</p><p><code>/try Pokusí se přeskočit plot.</code></p><p><code>/try Pokusí se udržet koně ve splašení.</code></p><p><code>/try Pokusí se vytáhnout kulku z rány.</code></p></section>
+          <section class="example bad"><b>Nesprávné použití</b><p><code>/try Zastřelí protivníka.</code></p><p><code>/try Vyhraje přestřelku.</code></p></section></div>
+          <p>Výsledek přestřelky ani jiné RP situace nesmí být rozhodnut jedním příkazem.</p>`
+      },
+      {
+        name: "/roll",
+        body: `
+          <h3>Definice</h3>
+          <p>Příkaz <code>/roll</code> slouží k vygenerování náhodného čísla. Využívá se pouze tehdy, když se na jeho použití shodnou všechny zúčastněné strany nebo pokud je vyžadován administrací.</p>
+          <p>Použití <code>/roll</code> nikdy nenahrazuje kvalitní roleplay.</p>
+          <div class="command-examples"><section class="example good"><b>Správné použití</b><p>Dva hráči řeší situaci, kterou nelze jinak objektivně rozhodnout.</p><p><code>/roll</code></p><p>Výsledek: hodil číslo 87.</p></section>
+          <section class="example bad"><b>Nesprávné použití</b><p><code>/roll</code></p><p>„Padlo mi vyšší číslo, takže tě zabíjím.“</p><p>„Vyhrál jsem, takže mě musíš pustit.“</p></section></div>
+          <p>Příkaz <code>/roll</code> neslouží k vynucování výsledků ani k obcházení pravidel roleplaye.</p>`
+      },
+      {
+        name: "Společná pravidla RP příkazů",
+        body: `
+          <ul><li>RP příkazy používej stručně a výstižně.</li><li>Nepoužívej je ke zbytečnému spamování chatu.</li><li>Nikdy jimi neurčuj chování ani reakce jiné postavy.</li><li>RP příkazy mají doplňovat roleplay, nikoliv jej nahrazovat.</li><li>V případě sporu rozhoduje administrace.</li></ul>`
+      },
+      {
+        name: "Přehled RP příkazů",
+        body: `
+          <div class="rules-table-wrap"><table class="rules-table"><thead><tr><th>Příkaz</th><th>Použití</th></tr></thead><tbody>
+          <tr><td><code>/me</code></td><td>Popisuje činnost, pohyb nebo jednání tvé postavy.</td></tr>
+          <tr><td><code>/do</code></td><td>Popisuje stav, okolí nebo výsledek situace.</td></tr>
+          <tr><td><code>/doc</code></td><td>Označuje průběh delší činnosti nebo zákroku.</td></tr>
+          <tr><td><code>/stopa</code></td><td>Vytváří vyšetřovatelnou RP stopu.</td></tr>
+          <tr><td><code>/try</code></td><td>Pokus o činnost s náhodným výsledkem.</td></tr>
+          <tr><td><code>/roll</code></td><td>Vygeneruje náhodné číslo po vzájemné dohodě hráčů.</td></tr>
+          </tbody></table></div>`
+      }
+    ]
   }
 ];

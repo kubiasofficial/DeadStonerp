@@ -18,7 +18,8 @@ function navigation() {
 
 function ruleSection(section, index, prefix = "") {
   const searchText = `${section.name} ${plainText(section.body)}`.toLocaleLowerCase("cs");
-  return `<details class="rule-section ${section.pledge ? "player-pledge" : ""}" id="${prefix}pravidlo-${index + 1}" open data-search="${escapeHtml(searchText)}">
+  const sectionType = section.pledge ? "pledge" : section.name.startsWith("/") ? "command" : section.name.toLowerCase().includes("přehled") ? "overview" : "standard";
+  return `<details class="rule-section ${section.pledge ? "player-pledge" : ""}" id="${prefix}pravidlo-${index + 1}" open data-type="${sectionType}" data-search="${escapeHtml(searchText)}">
     <summary><span>${String(index + 1).padStart(2, "0")}</span><h2>${escapeHtml(section.name)}</h2><i aria-hidden="true"></i></summary>
     <div class="rule-body prose">${section.body}</div></details>`;
 }
@@ -64,6 +65,27 @@ function renderIndex() {
 
 document.querySelector("#rules-sidebar").innerHTML = navigation();
 if (currentIndex >= 0) renderChapter(); else renderIndex();
+document.body.insertAdjacentHTML("afterbegin", `<div class="reading-progress" aria-hidden="true"><i></i></div>`);
+const progressBar = document.querySelector(".reading-progress i");
+const updateReadingProgress = () => {
+  const height = document.documentElement.scrollHeight - innerHeight;
+  progressBar.style.width = `${height > 0 ? Math.min(100, Math.max(0, scrollY / height * 100)) : 0}%`;
+};
+addEventListener("scroll", updateReadingProgress, { passive: true });
+addEventListener("resize", updateReadingProgress);
+updateReadingProgress();
+
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("rule-visible");
+      observer.unobserve(entry.target);
+    }
+  }), { threshold: .08, rootMargin: "0px 0px -40px" });
+  document.querySelectorAll(".rule-section").forEach(section => observer.observe(section));
+} else {
+  document.querySelectorAll(".rule-section").forEach(section => section.classList.add("rule-visible"));
+}
 const sidebar = document.querySelector("#rules-sidebar");
 document.querySelector("#sidebar-toggle").onclick = event => {
   const open = sidebar.classList.toggle("open"); event.currentTarget.setAttribute("aria-expanded", String(open));
