@@ -35,5 +35,6 @@ export const env = {
   sessionSecret: process.env.SESSION_SECRET || "",
   firebaseProjectId: process.env.FIREBASE_PROJECT_ID || "",
   firebaseClientEmail: process.env.FIREBASE_CLIENT_EMAIL || "",
-  firebasePrivateKey: (process.env.FIREBASE_PRIVATE_KEY || "").replace(/\\n/g, "\n")
+  firebasePrivateKey: (process.env.FIREBASE_PRIVATE_KEY || "").replace(/\\n/g, "\n"),
+  firebaseStorageBucket: process.env.FIREBASE_STORAGE_BUCKET || "deadstonerp-315bd.firebasestorage.app"
 };

@@ -1,5 +1,6 @@
 import { FieldValue } from "firebase-admin/firestore";
-import { db } from "../config/firebase.js";
+import crypto from "node:crypto";
+import { db, storageBucket } from "../config/firebase.js";
 
 const publicCollections = new Set(["news", "towns"]);
 
@@ -60,6 +61,66 @@ export async function createContent(collection, input, actor = "api") {
   }, { merge: true });
   await writeAudit(actor, `${collection}.write`, `${collection}/${id}`, input);
   return serialize(await ref.get());
+}
+
+export async function listAdminContent(collection) {
+  if (!publicCollections.has(collection)) throw new Error("Nepovolená kolekce.");
+  const snapshot = await db.collection(collection).limit(100).get();
+  return snapshot.docs.map(serialize).sort((a, b) =>
+    new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0));
+}
+
+export async function updateContent(collection, id, input, actor = "api") {
+  if (!publicCollections.has(collection)) throw new Error("Nepovolená kolekce.");
+  const ref = db.collection(collection).doc(cleanId(id));
+  if (!(await ref.get()).exists) throw Object.assign(new Error("Záznam nebyl nalezen."), { status: 404 });
+  const patch = {
+    ...input,
+    updatedAt: FieldValue.serverTimestamp()
+  };
+  if (Object.hasOwn(input, "published")) {
+    patch.published = Boolean(input.published);
+    patch.publishedAt = input.published ? FieldValue.serverTimestamp() : null;
+  }
+  await ref.set(patch, { merge: true });
+  await writeAudit(actor, `${collection}.update`, `${collection}/${id}`, input);
+  return serialize(await ref.get());
+}
+
+export async function deleteContent(collection, id, actor = "api") {
+  if (!publicCollections.has(collection)) throw new Error("Nepovolená kolekce.");
+  const ref = db.collection(collection).doc(cleanId(id));
+  const snapshot = await ref.get();
+  if (!snapshot.exists) throw Object.assign(new Error("Záznam nebyl nalezen."), { status: 404 });
+  await ref.delete();
+  await writeAudit(actor, `${collection}.delete`, `${collection}/${id}`);
+  return { id, deleted: true };
+}
+
+export async function uploadContentImage(dataUrl, folder = "content") {
+  const match = String(dataUrl || "").match(/^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/);
+  if (!match) throw Object.assign(new Error("Podporované formáty obrázku jsou JPG, PNG a WEBP."), { status: 400 });
+  const buffer = Buffer.from(match[2], "base64");
+  if (!buffer.length || buffer.length > 5 * 1024 * 1024) {
+    throw Object.assign(new Error("Obrázek smí mít maximálně 5 MB."), { status: 400 });
+  }
+  const extension = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" }[match[1]];
+  const safeFolder = ["news", "towns"].includes(folder) ? folder : "content";
+  const token = crypto.randomUUID();
+  const path = `${safeFolder}/${Date.now()}-${crypto.randomUUID()}.${extension}`;
+  const file = storageBucket.file(path);
+  await file.save(buffer, {
+    resumable: false,
+    contentType: match[1],
+    metadata: {
+      cacheControl: "public,max-age=31536000,immutable",
+      metadata: { firebaseStorageDownloadTokens: token }
+    }
+  });
+  return {
+    imageUrl: `https://firebasestorage.googleapis.com/v0/b/${storageBucket.name}/o/${encodeURIComponent(path)}?alt=media&token=${token}`,
+    path
+  };
 }
 
 export async function submitWhitelistApplication(input) {

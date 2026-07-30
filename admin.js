@@ -95,6 +95,127 @@ function accessCard(item) {
   </article>`;
 }
 
+function contentLabel() {
+  return section === "news" ? "novinku" : "město";
+}
+
+function renderContentManager(items) {
+  const isNews = section === "news";
+  tabs.innerHTML = `<span class="status-badge">${isNews ? "Redakce novinek" : "Městská kronika"}</span>`;
+  list.innerHTML = `
+    <form class="content-editor" id="content-editor">
+      <input type="hidden" id="content-id">
+      <h2 id="editor-title">${isNews ? "Nová novinka" : "Nové město"}</h2>
+      <div class="editor-grid">
+        <label>${isNews ? "Nadpis" : "Název města"}<input type="text" id="content-title" required maxlength="100"></label>
+        <label>Obrázek<input type="file" id="content-image" accept="image/jpeg,image/png,image/webp"></label>
+      </div>
+      <label>Text<textarea id="content-text" required maxlength="3000"></textarea></label>
+      <img class="content-preview" id="content-preview" alt="Náhled obrázku" hidden>
+      <label><input type="checkbox" id="content-published"> Ihned publikovat na webu</label>
+      <div class="actions"><button class="button approve" type="submit">Uložit</button><button class="button button-ghost" id="content-cancel" type="button" hidden>Zrušit úpravu</button></div>
+    </form>
+    <div class="request-list" id="content-items">
+      ${items.length ? items.map(item => `<article class="request-card content-admin-card">
+        ${item.imageUrl ? `<img src="${escapeHtml(item.imageUrl)}" alt="">` : `<div></div>`}
+        <div><h2>${escapeHtml(isNews ? item.title : item.name)}</h2><p>${escapeHtml(item.text)}</p>
+        <span class="status-badge ${item.published ? "approved" : ""}">${item.published ? "Publikováno" : "Skryto"}</span>
+        <div class="actions"><button class="button button-ghost" data-edit-content="${item.id}">Upravit</button><button class="button reject" data-delete-content="${item.id}">Smazat</button></div></div>
+      </article>`).join("") : "<p>Zatím zde nejsou žádné záznamy.</p>"}
+    </div>`;
+  const byId = Object.fromEntries(items.map(item => [item.id, item]));
+  document.querySelector("#content-editor").addEventListener("submit", event => saveContent(event, byId));
+  document.querySelector("#content-image").addEventListener("change", previewSelectedImage);
+  document.querySelector("#content-cancel").addEventListener("click", resetContentForm);
+  document.querySelectorAll("[data-edit-content]").forEach(button =>
+    button.addEventListener("click", () => editContent(byId[button.dataset.editContent])));
+  document.querySelectorAll("[data-delete-content]").forEach(button =>
+    button.addEventListener("click", () => removeContent(button.dataset.deleteContent)));
+}
+
+function previewSelectedImage(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const preview = document.querySelector("#content-preview");
+  preview.src = URL.createObjectURL(file);
+  preview.hidden = false;
+}
+
+function editContent(item) {
+  const isNews = section === "news";
+  document.querySelector("#content-id").value = item.id;
+  document.querySelector("#content-title").value = isNews ? item.title : item.name;
+  document.querySelector("#content-text").value = item.text || "";
+  document.querySelector("#content-published").checked = Boolean(item.published);
+  document.querySelector("#editor-title").textContent = `Upravit: ${isNews ? item.title : item.name}`;
+  document.querySelector("#content-cancel").hidden = false;
+  const preview = document.querySelector("#content-preview");
+  if (item.imageUrl) { preview.src = item.imageUrl; preview.hidden = false; }
+  document.querySelector("#content-editor").scrollIntoView({ behavior: "smooth" });
+}
+
+function resetContentForm() {
+  document.querySelector("#content-editor").reset();
+  document.querySelector("#content-id").value = "";
+  document.querySelector("#editor-title").textContent = section === "news" ? "Nová novinka" : "Nové město";
+  document.querySelector("#content-preview").hidden = true;
+  document.querySelector("#content-cancel").hidden = true;
+}
+
+function fileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function saveContent(event, items) {
+  event.preventDefault();
+  const button = event.currentTarget.querySelector("[type=submit]");
+  button.disabled = true;
+  try {
+    const id = document.querySelector("#content-id").value;
+    const existing = items[id] || {};
+    let imageUrl = existing.imageUrl || "";
+    const file = document.querySelector("#content-image").files[0];
+    if (file) {
+      const uploaded = await api("/api/admin/content-upload", {
+        method: "POST",
+        body: JSON.stringify({ folder: section, dataUrl: await fileAsDataUrl(file) })
+      });
+      imageUrl = uploaded.imageUrl;
+    }
+    const title = document.querySelector("#content-title").value.trim();
+    const payload = {
+      ...(section === "news" ? { title } : { name: title }),
+      text: document.querySelector("#content-text").value.trim(),
+      imageUrl,
+      published: document.querySelector("#content-published").checked
+    };
+    await api(id ? `/api/admin/content/${section}/${id}` : `/api/admin/content/${section}`, {
+      method: id ? "PATCH" : "POST",
+      body: JSON.stringify(payload)
+    });
+    notify(`${section === "news" ? "Novinka" : "Město"} bylo uloženo.`);
+    load();
+  } catch (error) {
+    notify(error.message, true);
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function removeContent(id) {
+  if (!confirm(`Opravdu chceš tento záznam smazat?`)) return;
+  try {
+    await api(`/api/admin/content/${section}/${id}`, { method: "DELETE" });
+    notify(`${section === "news" ? "Novinka" : "Město"} bylo smazáno.`);
+    load();
+  } catch (error) { notify(error.message, true); }
+}
+
 async function decideApplication(button) {
   const rejected = button.dataset.decision === "rejected";
   const reason = rejected ? prompt("Uveď důvod zamítnutí:") : "";
@@ -166,6 +287,11 @@ async function load() {
   renderTabs();
   list.innerHTML = "<p>Načítám úřední záznamy…</p>";
   try {
+    if (["news", "towns"].includes(section)) {
+      const data = await api(`/api/admin/content/${section}`);
+      renderContentManager(data);
+      return;
+    }
     const path = section === "applications"
       ? `/api/admin/whitelist/applications?status=${status}`
       : section === "interviews"

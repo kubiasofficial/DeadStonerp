@@ -4,8 +4,12 @@ import helmet from "helmet";
 import { env } from "../config/env.js";
 import {
   createContent,
+  deleteContent,
   getSiteSettings,
+  listAdminContent,
   listPublished,
+  updateContent,
+  uploadContentImage,
   updateSiteSettings
 } from "../services/content-service.js";
 import { requireAdmin, requireDiscordAdmin, requireSession } from "./middleware.js";
@@ -24,7 +28,7 @@ export function createApiServer() {
     origin: env.publicOrigin.split(",").map(value => value.trim()),
     credentials: true
   }));
-  app.use(express.json({ limit: "100kb" }));
+  app.use(express.json({ limit: "7mb" }));
   registerDiscordAuth(app);
 
   app.get("/api/health", (_req, res) => {
@@ -97,6 +101,40 @@ export function createApiServer() {
 
   app.patch("/api/admin/whitelist/attempts/:discordId", requireDiscordAdmin, async (req, res, next) => {
     try { res.json({ data: await adjustAttempts(req.params.discordId, req.body.type, req.body.amount) }); }
+    catch (error) { next(error); }
+  });
+
+  app.get("/api/admin/content/:collection", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await listAdminContent(req.params.collection) }); }
+    catch (error) { next(error); }
+  });
+
+  app.post("/api/admin/content/:collection", requireDiscordAdmin, async (req, res, next) => {
+    try {
+      res.status(201).json({
+        data: await createContent(req.params.collection, req.body, `discord:${req.user.id}`)
+      });
+    } catch (error) { next(error); }
+  });
+
+  app.patch("/api/admin/content/:collection/:id", requireDiscordAdmin, async (req, res, next) => {
+    try {
+      res.json({
+        data: await updateContent(req.params.collection, req.params.id, req.body, `discord:${req.user.id}`)
+      });
+    } catch (error) { next(error); }
+  });
+
+  app.delete("/api/admin/content/:collection/:id", requireDiscordAdmin, async (req, res, next) => {
+    try {
+      res.json({
+        data: await deleteContent(req.params.collection, req.params.id, `discord:${req.user.id}`)
+      });
+    } catch (error) { next(error); }
+  });
+
+  app.post("/api/admin/content-upload", requireDiscordAdmin, async (req, res, next) => {
+    try { res.status(201).json({ data: await uploadContentImage(req.body.dataUrl, req.body.folder) }); }
     catch (error) { next(error); }
   });
 
