@@ -353,6 +353,22 @@ window.RULE_CHAPTERS = [
           <aside class="gross-right"><b>Právo hráče</b><p>Nikdo nesmí být k účasti na Gross RP nucen ani za odmítnutí jakkoli znevýhodněn.</p></aside>`
       },
       {
+        name: "Trvalé poškození a amputace",
+        body: `
+          <aside class="amputation-alert"><span>!</span><div><b>Výslovný souhlas je povinný</b><p>Odříznutí nebo jiné trvalé odstranění končetiny je bez předchozího výslovného souhlasu hráče přísně zakázáno.</p></div></aside>
+          <p>Souhlas musí být udělen ještě před zahájením dané části RP situace prostřednictvím L-OOC chatu v přesném znění:</p>
+          <div class="amputation-consent"><small>Povinné znění v L-OOC</small><strong>Souhlasím s následky.</strong></div>
+          <ul>
+            <li>Souhlas musí udělit přímo hráč postavy, které má být trvalý následek způsoben.</li>
+            <li>Mlčení, pokračování v RP situaci ani obecný souhlas s Gross RP nelze považovat za souhlas s amputací.</li>
+            <li>Hráč má právo souhlas odmítnout. Odmítnutí nesmí vést k OOC nátlaku, znevýhodnění ani jinému postihu.</li>
+            <li>Pokud hráč souhlas neudělí, musí být situace odehrána bez odříznutí končetiny a bez jiného srovnatelného trvalého následku.</li>
+          </ul>
+          <aside class="amputation-proof"><span>▣</span><div><b>Uchovej důkaz o souhlasu</b><p>Všem zúčastněným doporučujeme uchovat snímek obrazovky zachycující udělený souhlas. Administrace může tento důkaz vyžádat při řešení sporu nebo ověřování, zda byl písemný souhlas skutečně udělen.</p></div></aside>
+          <p>Udělený souhlas se vztahuje pouze na konkrétní situaci a konkrétní následek. Nelze jej považovat za trvalé povolení pro budoucí RP scény.</p>
+          <p>Při řádně schváleném Character Kill se trvalé následky řídí pravidly kapitoly <strong>Character Kill</strong>.</p>`
+      },
+      {
         name: "Povolené výjimky",
         body: `
           <h3>Character Kill (CK)</h3>

@@ -42,7 +42,8 @@ export const ruleQuestions = [
   { id: "gross-novy-hrac", title: "Nový účastník Gross RP", question: "Jak musí skupina postupovat, pokud se do probíhající Gross RP situace zapojí další hráč?" },
   { id: "gross-zakazane", title: "Zakázaný Gross RP", question: "Uveď alespoň tři druhy obsahu, které jsou zakázané i tehdy, když by s nimi všichni hráči souhlasili." },
   { id: "gross-vyjimky", title: "Výjimky Gross RP", question: "Jaké výjimky platí pro trvalé následky při CK a pro skalpování indiánskými kmeny?" },
-  { id: "gross-administrace", title: "Zásah administrace", question: "Kdy může administrace Gross RP ukončit a jak musí účastníci na její rozhodnutí reagovat?" }
+  { id: "gross-administrace", title: "Zásah administrace", question: "Kdy může administrace Gross RP ukončit a jak musí účastníci na její rozhodnutí reagovat?" },
+  { id: "gross-amputace", title: "Trvalé poškození a amputace", question: "Jaký přesný souhlas je nutný před amputací končetiny a proč se doporučuje uchovat jeho screenshot?" }
 ];
 
 const WHITELIST_QUESTION_COUNT = 5;
