@@ -100,7 +100,7 @@ h2 { margin: 0 0 15px; color: #b99a68; font-family: var(--display); font-size: 1
 .town { grid-template-columns: 78px 1fr; }
 .town .thumb { height: 48px; }
 .lore-strip { padding: 70px 0; text-align: center; border-block: 1px solid #2b1d10; background: linear-gradient(rgba(8,7,6,.82), rgba(8,7,6,.95)), url("obrazky/hero-deadstone.webp") 50% 58%/cover fixed; }
-.lore-inner h2 { margin: 0; font-size: clamp(24px, 4vw, 42px); }
+.lore-inner h2 { margin: 0; color: #c8a36c; font-family: "Cinzel", Georgia, serif; font-size: clamp(24px, 4vw, 42px); font-weight: 600; letter-spacing: .025em; text-shadow: 0 3px 12px #000; }
 .lore-inner p:last-child { color: #8d816d; }
 footer { background: radial-gradient(circle at 75% 30%, #17130d, #090908 60%); border-top: 1px solid #2d2114; }
 .footer-grid { min-height: 180px; display: grid; grid-template-columns: 1.1fr .9fr .7fr .8fr; gap: 40px; align-items: center; padding-block: 30px; }
