@@ -101,6 +101,12 @@ h2 { margin: 0 0 15px; color: #b99a68; font-family: var(--display); font-size: 1
 .list-item p { margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .town { grid-template-columns: 78px 1fr; }
 .town .thumb { height: 48px; }
+.town { color: inherit; transition: background .2s, border-color .2s; }
+.town:hover { background: rgba(47,94,59,.15); }
+.town small { display:block;margin-bottom:2px;color:#657b66;font-size:7px;text-transform:uppercase;letter-spacing:.05em; }
+.town .atlas-thumb { background-image:linear-gradient(rgba(28,20,11,.15),rgba(8,7,5,.38)),url("obrazky/atlas-deadstone.png");background-size:350% auto;background-position:var(--map-x) var(--map-y);filter:sepia(.28) saturate(.72) brightness(.72); }
+.atlas-panel-link { display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:11px 12px;color:#c9b486;background:linear-gradient(90deg,rgba(47,94,59,.28),rgba(18,17,13,.2));border:1px solid #3e6044;font:9px var(--display);text-transform:uppercase;transition:.2s; }
+.atlas-panel-link:hover { color:#f1dbad;border-color:#78a87c;background:rgba(47,94,59,.4); }
 .lore-strip { padding: 70px 0; text-align: center; border-block: 1px solid #2b1d10; background: linear-gradient(rgba(8,7,6,.82), rgba(8,7,6,.95)), url("obrazky/hero-deadstone.webp") 50% 58%/cover fixed; }
 .lore-inner h2 { margin: 0; color: #c8a36c; font-family: "Cinzel", Georgia, serif; font-size: clamp(24px, 4vw, 42px); font-weight: 600; letter-spacing: .025em; text-shadow: 0 3px 12px #000; }
 .lore-inner p:last-child { color: #8d816d; }

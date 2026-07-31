@@ -85,7 +85,7 @@ function renderConverter(){
   const items=atlas.locations.filter(item=>item.originalName&&item.originalName!==item.name);
   document.querySelector("#name-converter").innerHTML=`<div class="converter-row"><span>Původní název</span><span>Deadstone</span></div>${items.map(item=>`<div class="converter-row"><span>${escapeHtml(item.originalName)}</span><span>${escapeHtml(item.name)}</span></div>`).join("")}`;
 }
-function renderAll(){renderMarkers();renderRegions();renderFilters();renderLocations();renderConverter();observeReveals();sizeStage();}
+function renderAll(){renderMarkers();renderRegions();renderFilters();renderLocations();renderConverter();observeReveals();sizeStage();const requested=new URLSearchParams(location.search).get("location");const item=atlas.locations.find(entry=>entry.id===requested);if(item)setTimeout(()=>{focusPoint(item.mapX,item.mapY,2.2);openLocation(item.id)},180);}
 
 frame.addEventListener("wheel",event=>{event.preventDefault();zoomAt(event.deltaY<0?.2:-.2)},{passive:false});
 frame.addEventListener("pointerdown",event=>{if(event.target.closest("button"))return;activePointers.set(event.pointerId,{x:event.clientX,y:event.clientY});frame.setPointerCapture(event.pointerId);if(activePointers.size===2){const points=[...activePointers.values()];pinchDistance=Math.hypot(points[0].x-points[1].x,points[0].y-points[1].y);pinchZoom=mapState.zoom;mapState.dragging=false;return}mapState.dragging=true;frame.classList.add("dragging");mapState.startX=event.clientX;mapState.startY=event.clientY;mapState.originX=mapState.panX;mapState.originY=mapState.panY});

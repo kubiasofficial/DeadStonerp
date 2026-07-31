@@ -23,17 +23,18 @@ async function loadLiveData() {
   const apiBase = window.DEADSTONE_CONFIG?.apiBase?.replace(/\/$/, "");
   if (!apiBase) return;
   try {
-    const [newsResponse, townsResponse] = await Promise.all([
+    const [newsResponse, atlasResponse] = await Promise.all([
       fetch(`${apiBase}/api/news?limit=3`),
-      fetch(`${apiBase}/api/towns?limit=4`)
+      fetch(`${apiBase}/api/atlas`)
     ]);
-    if (!newsResponse.ok || !townsResponse.ok) {
+    if (!newsResponse.ok) {
       throw new Error("API není dostupné.");
     }
-    const [{ data: liveNews }, { data: liveTowns }] = await Promise.all([
-      newsResponse.json(),
-      townsResponse.json()
-    ]);
+    const { data: liveNews } = await newsResponse.json();
+    const atlasPayload = atlasResponse.ok ? (await atlasResponse.json()).data : null;
+    const atlasLocations = atlasPayload?.locations?.length
+      ? atlasPayload.locations
+      : window.DEADSTONE_ATLAS?.locations || [];
 
     if (liveNews?.length && newsList) {
       newsList.innerHTML = liveNews.map((item, index) => `
@@ -43,12 +44,16 @@ async function loadLiveData() {
         </article>`).join("");
     }
 
-    if (liveTowns?.length && townList) {
-      townList.innerHTML = liveTowns.map((item, index) => `
-        <article class="list-item town">
-          <div class="thumb" style="--position:${fallbackPositions[index % fallbackPositions.length]};background-image:linear-gradient(rgba(68,42,18,.05),rgba(10,8,6,.25)),url('${escapeHtml(item.imageUrl || "obrazky/hero-deadstone.webp")}')"></div>
-          <div><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.text)}</p></div>
-        </article>`).join("");
+    const featuredTowns = atlasLocations
+      .filter(item => item.isPublished !== false && ["city", "harbor"].includes(item.category))
+      .sort((a, b) => (a.order || 0) - (b.order || 0))
+      .slice(0, 4);
+    if (featuredTowns.length && townList) {
+      townList.innerHTML = featuredTowns.map(item => `
+        <a class="list-item town" href="/atlas?location=${encodeURIComponent(item.id)}" aria-label="Zobrazit ${escapeHtml(item.name)} v atlasu">
+          <div class="thumb atlas-thumb" style="--map-x:${Number(item.mapX) || 50}%;--map-y:${Number(item.mapY) || 50}%;${item.imageUrl ? `background-image:linear-gradient(rgba(28,20,11,.15),rgba(8,7,5,.38)),url('${escapeHtml(item.imageUrl)}')` : ""}"></div>
+          <div><h3>${escapeHtml(item.name)}</h3><small>${escapeHtml(item.region)} · ${escapeHtml(item.type)}</small><p>${escapeHtml(item.shortDescription || item.description)}</p></div>
+        </a>`).join("") + `<a class="atlas-panel-link" href="/atlas">Prozkoumat celý atlas <span>→</span></a>`;
     }
     document.documentElement.dataset.live = "true";
   } catch (error) {
