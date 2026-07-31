@@ -31,6 +31,7 @@ import {
   listMyFactionInvitations, respondFactionInvitation,
   listMyTickets, prepareTicketUpload, setPriority, transferTicket, updateTicketSettings
 } from "../services/ticket-service.js";
+import { createAtlasEntry, deleteAtlasEntry, getAtlas, updateAtlasEntry } from "../services/atlas-service.js";
 
 export function createApiServer() {
   const app = express();
@@ -70,6 +71,33 @@ export function createApiServer() {
       res.set("Cache-Control", "public, max-age=60, s-maxage=300");
       res.json({ data: await getLeadership() });
     } catch (error) { next(error); }
+  });
+
+  app.get("/api/atlas", async (_req, res, next) => {
+    try {
+      res.set("Cache-Control", "public, max-age=60, s-maxage=300");
+      res.json({ data: await getAtlas(true) });
+    } catch (error) { next(error); }
+  });
+
+  app.get("/api/admin/atlas", requireDiscordAdmin, async (_req, res, next) => {
+    try { res.json({ data: await getAtlas(false) }); }
+    catch (error) { next(error); }
+  });
+
+  app.post("/api/admin/atlas/:kind", requireDiscordAdmin, async (req, res, next) => {
+    try { res.status(201).json({ data: await createAtlasEntry(req.params.kind, req.body, req.user) }); }
+    catch (error) { next(error); }
+  });
+
+  app.patch("/api/admin/atlas/:kind/:id", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await updateAtlasEntry(req.params.kind, req.params.id, req.body, req.user) }); }
+    catch (error) { next(error); }
+  });
+
+  app.delete("/api/admin/atlas/:kind/:id", requireDiscordAdmin, async (req, res, next) => {
+    try { res.json({ data: await deleteAtlasEntry(req.params.kind, req.params.id, req.user) }); }
+    catch (error) { next(error); }
   });
 
   app.get("/api/support/faction-members", requireSession, async (_req, res, next) => {

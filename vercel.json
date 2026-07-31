@@ -2,6 +2,10 @@
   "version": 2,
   "rewrites": [
     {
+      "source": "/atlas",
+      "destination": "/atlas.html"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/api/index.js"
     }

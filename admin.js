@@ -40,6 +40,10 @@ const ticketTabs = [
 ];
 
 function renderTabs() {
+  if (section === "atlas") {
+    tabs.innerHTML = `<span class="status-badge">Kartografický úřad · lokace a regiony</span>`;
+    return;
+  }
   if (["reputation", "feedback", "ticket-settings"].includes(section)) {
     tabs.innerHTML = `<span class="status-badge">${section === "reputation" ? "Reputace vedení" : section === "feedback" ? "Důvěrná zpětná vazba" : "Oprávnění citlivých ticketů"}</span>`;
     return;
@@ -438,6 +442,7 @@ async function load() {
     if (section === "reputation") { await renderReputation(); return; }
     if (section === "feedback") { await renderFeedback(); return; }
     if (section === "ticket-settings") { await renderTicketSettings(); return; }
+    if (section === "atlas") { await window.renderAtlasManager({ api, list, escapeHtml, notify }); return; }
     if (section === "tickets") {
       const data = await api(`/api/admin/tickets?status=${status}`);
       list.innerHTML = data.length ? data.map(ticketCard).join("") : "<p>V této části nejsou žádné tickety.</p>";

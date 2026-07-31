@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Oficiální interaktivní atlas Svobodného státu Deadstone — regiony, města, osady a významná místa.">
+  <title>Atlas státu Deadstone | Deadstone Roleplay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Rye&family=Roboto+Slab:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="atlas.css">
+</head>
+<body class="atlas-page">
+  <a class="skip-link" href="#obsah">Přejít na obsah</a>
+  <header class="site-header"><nav class="nav shell" aria-label="Hlavní navigace">
+    <a class="brand" href="index.html"><img src="obrazky/logo-transparent.png" alt="Deadstone Roleplay"></a>
+    <button class="menu-toggle" aria-expanded="false" aria-controls="main-menu"><span></span><span></span><span></span><span class="sr-only">Otevřít menu</span></button>
+    <div class="nav-menu" id="main-menu">
+      <a href="index.html">Domů</a><a href="o-serveru.html">O serveru</a><a href="pravidla/index.html">Pravidla</a>
+      <a class="character-link" href="postavy.html" hidden>Postavy</a><a href="vedeni.html">Vedení</a><a href="podpora.html">Podpora</a>
+      <a class="atlas-link active" href="/atlas" aria-current="page">Atlas</a><a class="whitelist-link" href="whitelist.html" hidden>Whitelist</a><a class="admin-link" href="admin.html" hidden>Admin</a>
+    </div>
+    <a class="button button-small nav-join discord-login" href="#">Připoj se k nám</a>
+    <button class="discord-profile" type="button" hidden><img alt=""><span></span><small hidden>Admin</small></button>
+  </nav></header>
+
+  <main id="obsah">
+    <section class="atlas-hero">
+      <div class="atlas-hero-copy shell reveal"><p class="eyebrow">Svobodný stát · 1899</p><h1>Atlas státu<br>Deadstone</h1>
+        <p class="atlas-subtitle">Poznejte kraje, města, osady a významná místa Svobodného státu Deadstone.</p>
+        <p>Ve světě Deadstone se používají vlastní názvy měst, oblastí a významných lokalit. Tento atlas slouží jako oficiální geografický průvodce pro všechny obyvatele i nově příchozí.</p>
+        <div class="atlas-actions"><a class="button atlas-button" href="#mapa">Prozkoumat mapu</a><a class="button button-ghost" href="#lokace">Přehled lokací</a></div>
+      </div>
+    </section>
+
+    <section class="atlas-section shell reveal" id="mapa">
+      <header class="atlas-heading"><p class="eyebrow">Kartografický úřad</p><h2>Mapa státu</h2><p>Tažením mapu posunete, kolečkem nebo tlačítky změníte přiblížení. Kliknutím na značku otevřete zápis o lokaci.</p></header>
+      <div class="map-layout">
+        <div class="map-frame" id="map-frame" tabindex="0" aria-label="Interaktivní mapa státu Deadstone">
+          <div class="map-stage" id="map-stage"><img src="obrazky/atlas-deadstone.png" alt="Historická mapa Svobodného státu Deadstone" draggable="false"><div id="map-markers"></div></div>
+          <div class="map-controls" aria-label="Ovládání mapy"><button type="button" data-map-action="in" aria-label="Přiblížit">+</button><button type="button" data-map-action="out" aria-label="Oddálit">−</button><button type="button" data-map-action="reset">Reset</button><button type="button" data-map-action="fullscreen">Celá obrazovka</button></div>
+          <div class="map-status" id="map-status">100 %</div>
+        </div>
+        <aside class="location-panel" id="location-panel" aria-live="polite" hidden><button class="panel-close" type="button" aria-label="Zavřít detail">×</button><div id="location-detail"></div></aside>
+      </div>
+    </section>
+
+    <section class="atlas-section atlas-regions-section" id="regiony"><div class="shell"><header class="atlas-heading reveal"><p class="eyebrow">Šest krajů</p><h2>Regiony Deadstone</h2></header><div class="region-grid" id="region-grid"></div></div></section>
+
+    <section class="atlas-section shell" id="lokace"><header class="atlas-heading reveal"><p class="eyebrow">Městský a krajský rejstřík</p><h2>Přehled měst a lokací</h2></header>
+      <div class="atlas-filters reveal"><label><span>Vyhledávání</span><input id="location-search" type="search" placeholder="Název, region, typ nebo původní označení…"></label><label><span>Region</span><select id="region-filter"><option value="">Všechny regiony</option></select></label><label><span>Typ místa</span><select id="type-filter"><option value="">Všechny typy</option><option value="city">Všechna města</option><option value="settlement">Osady</option><option value="ranch">Ranče</option><option value="station">Stanice</option><option value="harbor">Přístavy</option><option value="fort">Pevnosti</option></select></label><label><span>Řazení</span><select id="sort-filter"><option value="name">Podle názvu</option><option value="region">Podle regionu</option><option value="type">Podle typu</option></select></label></div>
+      <div class="location-list" id="location-list"></div><p class="atlas-empty" id="atlas-empty" hidden>Takové místo nebylo v úředních mapách nalezeno.</p>
+    </section>
+
+    <section class="atlas-section converter-section"><div class="shell"><header class="atlas-heading reveal"><p class="eyebrow">Orientační pomůcka mimo RP</p><h2>Převodník názvů</h2><p>Tato tabulka slouží jako orientační pomůcka pro hráče, kteří znají původní mapu Red Dead Redemption 2.</p></header><div class="converter-table reveal" id="name-converter"></div><div class="atlas-notice reveal"><strong>⚠ Důležité pravidlo</strong><p>Ve světě Deadstone se při roleplayi používají výhradně názvy Deadstone. Původní názvy slouží pouze jako orientační pomůcka mimo roleplay.</p></div></div></section>
+  </main>
+  <footer><p class="copyright">© 1899–2026 Deadstone Roleplay · Oficiální atlas státu</p></footer>
+  <script src="web-config.js"></script><script src="atlas-data.js"></script><script src="atlas.js"></script>
+</body></html>
