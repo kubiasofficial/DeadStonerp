@@ -19,6 +19,22 @@ if (townList) {
   townList.innerHTML = `<p class="empty-content">Městské kroniky jsou zatím prázdné.</p>`;
 }
 
+function renderAtlasTowns(locations = []) {
+  if (!townList) return;
+  const featuredTowns = locations
+    .filter(item => item.isPublished !== false && ["city", "harbor"].includes(item.category))
+    .sort((a, b) => (a.order || 0) - (b.order || 0))
+    .slice(0, 4);
+  if (!featuredTowns.length) return;
+  townList.innerHTML = featuredTowns.map(item => `
+    <a class="list-item town" href="/atlas?location=${encodeURIComponent(item.id)}" aria-label="Zobrazit ${escapeHtml(item.name)} v atlasu">
+      <div class="thumb atlas-thumb" style="--map-x:${Number(item.mapX) || 50}%;--map-y:${Number(item.mapY) || 50}%;${item.imageUrl ? `background-image:linear-gradient(rgba(28,20,11,.15),rgba(8,7,5,.38)),url('${escapeHtml(item.imageUrl)}')` : ""}"></div>
+      <div><h3>${escapeHtml(item.name)}</h3><small>${escapeHtml(item.region)} · ${escapeHtml(item.type)}</small><p>${escapeHtml(item.shortDescription || item.description)}</p></div>
+    </a>`).join("") + `<a class="atlas-panel-link" href="/atlas">Prozkoumat celý atlas <span>→</span></a>`;
+}
+
+renderAtlasTowns(window.DEADSTONE_ATLAS?.locations || []);
+
 async function loadLiveData() {
   const apiBase = window.DEADSTONE_CONFIG?.apiBase?.replace(/\/$/, "");
   if (!apiBase) return;
@@ -44,17 +60,7 @@ async function loadLiveData() {
         </article>`).join("");
     }
 
-    const featuredTowns = atlasLocations
-      .filter(item => item.isPublished !== false && ["city", "harbor"].includes(item.category))
-      .sort((a, b) => (a.order || 0) - (b.order || 0))
-      .slice(0, 4);
-    if (featuredTowns.length && townList) {
-      townList.innerHTML = featuredTowns.map(item => `
-        <a class="list-item town" href="/atlas?location=${encodeURIComponent(item.id)}" aria-label="Zobrazit ${escapeHtml(item.name)} v atlasu">
-          <div class="thumb atlas-thumb" style="--map-x:${Number(item.mapX) || 50}%;--map-y:${Number(item.mapY) || 50}%;${item.imageUrl ? `background-image:linear-gradient(rgba(28,20,11,.15),rgba(8,7,5,.38)),url('${escapeHtml(item.imageUrl)}')` : ""}"></div>
-          <div><h3>${escapeHtml(item.name)}</h3><small>${escapeHtml(item.region)} · ${escapeHtml(item.type)}</small><p>${escapeHtml(item.shortDescription || item.description)}</p></div>
-        </a>`).join("") + `<a class="atlas-panel-link" href="/atlas">Prozkoumat celý atlas <span>→</span></a>`;
-    }
+    renderAtlasTowns(atlasLocations);
     document.documentElement.dataset.live = "true";
   } catch (error) {
     console.info("Deadstone API není dostupné, používám lokální obsah.", error.message);
